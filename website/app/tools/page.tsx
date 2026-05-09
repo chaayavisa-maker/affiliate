@@ -12,7 +12,7 @@ const TOOLS = [
   { name: 'Writesonic', category: 'writing', url: 'https://writesonic.com', price: '$19/mo', rating: 4.5, desc: 'Affordable with SEO features', badge: null, free: true },
   // Coding
   { name: 'GitHub Copilot', category: 'coding', url: 'https://github.com/features/copilot', price: '$10/mo', rating: 4.8, desc: 'Best IDE integration, powered by GPT-4', badge: 'Top Pick', free: false },
-  { name: 'Cursor', category: 'coding', url: 'https://cursor.sh', price: '$20/mo', rating: 4.7, desc: 'AI-native code editor', badge: 'Editor's Choice', free: true },
+  { name: 'Cursor', category: 'coding', url: 'https://cursor.sh', price: '$20/mo', rating: 4.7, desc: 'AI-native code editor', badge: "Editor's Choice", free: true },
   { name: 'Tabnine', category: 'coding', url: 'https://tabnine.com?ref=YOUR_ID', price: '$12/mo', rating: 4.4, desc: 'Privacy-focused, runs locally', badge: null, free: true },
   // Design
   { name: 'Adobe Firefly', category: 'design', url: 'https://adobe.com/products/firefly', price: '$4.99/mo', rating: 4.7, desc: 'Commercially safe AI images', badge: 'Top Pick', free: true },
