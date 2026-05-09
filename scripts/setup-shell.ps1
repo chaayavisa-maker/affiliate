@@ -30,16 +30,19 @@ Write-Host ""
 # ---- Check requirements ----
 Write-Yellow "Checking requirements..."
 
-if (-not (Get-Command git   -ErrorAction SilentlyContinue)) { Write-Red "git not found. Install from https://git-scm.com"; exit 1 }
-if (-not (Get-Command node  -ErrorAction SilentlyContinue)) { Write-Red "Node.js not found. Install from https://nodejs.org"; exit 1 }
-if (-not (Get-Command python -ErrorAction SilentlyContinue) -and
-    -not (Get-Command python3 -ErrorAction SilentlyContinue)) {
-    Write-Red "Python 3 not found. Install from https://python.org"; exit 1
-}
+if (-not (Get-Command git  -ErrorAction SilentlyContinue)) { Write-Red "git not found. Install from https://git-scm.com"; exit 1 }
+if (-not (Get-Command node -ErrorAction SilentlyContinue)) { Write-Red "Node.js not found. Install from https://nodejs.org"; exit 1 }
 
-# Normalize python command (Windows often uses 'python' instead of 'python3')
-$PythonCmd = if (Get-Command python3 -ErrorAction SilentlyContinue) { "python3" } else { "python" }
-$PipCmd    = if (Get-Command pip3    -ErrorAction SilentlyContinue) { "pip3"    } else { "pip"    }
+# Resolve the correct Python command — Windows uses 'py' or 'python', rarely 'python3'
+$PythonCmd = $null
+foreach ($candidate in @("py", "python", "python3")) {
+    if (Get-Command $candidate -ErrorAction SilentlyContinue) {
+        # Verify it actually runs (some Windows python3 entries are broken stubs)
+        $ver = & $candidate --version 2>&1
+        if ($ver -match "Python 3") { $PythonCmd = $candidate; break }
+    }
+}
+if (-not $PythonCmd) { Write-Red "Python 3 not found. Install from https://python.org"; exit 1 }
 
 Write-Green "OK All requirements met"
 
