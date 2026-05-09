@@ -107,8 +107,9 @@ if (Get-Command gh -ErrorAction SilentlyContinue) {
 # ---- Install Python deps ----
 Write-Host ""
 Write-Yellow "Installing Python dependencies..."
+# Use 'python -m pip' instead of pip/pip3 directly — bypasses AppLocker blocks on pip.exe
 Push-Location $AgentsDir
-& $PipCmd install -r requirements.txt -q
+& $PythonCmd -m pip install -r requirements.txt -q
 Pop-Location
 Write-Green "OK Python dependencies installed"
 
