@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; }
+
+  .prose h2 { @apply text-2xl font-bold mt-10 mb-4 text-gray-900; }
+  .prose h3 { @apply text-xl font-semibold mt-8 mb-3 text-gray-800; }
+  .prose p  { @apply mb-4 leading-relaxed text-gray-700; }
+  .prose ul { @apply list-disc pl-6 mb-4 text-gray-700 space-y-1; }
+  .prose ol { @apply list-decimal pl-6 mb-4 text-gray-700 space-y-1; }
+  .prose a  { @apply text-sky-600 underline hover:text-sky-800 font-medium; }
+  .prose strong { @apply font-semibold text-gray-900; }
+  .prose blockquote { @apply border-l-4 border-sky-400 pl-4 italic text-gray-600 my-6; }
+  .prose table { @apply w-full border-collapse my-6 text-sm; }
+  .prose th { @apply bg-gray-100 font-semibold text-left px-4 py-2 border border-gray-300; }
+  .prose td { @apply px-4 py-2 border border-gray-200; }
+  .prose tr:nth-child(even) td { @apply bg-gray-50; }
+  .prose code { @apply bg-gray-100 px-1.5 py-0.5 rounded text-sm font-mono text-pink-700; }
+  .prose pre  { @apply bg-gray-900 text-gray-100 p-4 rounded-xl overflow-x-auto my-6; }
+  .prose pre code { @apply bg-transparent text-gray-100 p-0; }
+  .prose hr  { @apply my-10 border-gray-200; }
+}
