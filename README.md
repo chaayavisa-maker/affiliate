@@ -60,7 +60,7 @@ Sign up for these programs, get your affiliate IDs, then update `agents/content_
 | [PartnerStack](https://partnerstack.com) | SaaS tools | 20-40% |
 | [ShareASale](https://www.shareasale.com) | General software | 15-30% |
 | [Impact.com](https://impact.com) | Enterprise software | 20-35% |
-| [Amazon Associates](https://affiliate-program.amazon.com) | Books/hardware | 3-10% |
+| [Amazon Associates](https://affiliate-program.amazon.com) | Books/hardware | 3-10% | aitoolshub03f-20
 
 ### 6. Add Google AdSense
 1. Apply at [adsense.google.com](https://adsense.google.com)
