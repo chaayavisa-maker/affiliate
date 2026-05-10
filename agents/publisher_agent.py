@@ -59,7 +59,7 @@ export const schema = {schema_json}
     def _git_commit(self, file_path: Path, title: str):
         """Commit and push the new article."""
         try:
-            subprocess.run(["git", "config", "user.email", "bot@ai-tools-hub.com"], check=True)
+            subprocess.run(["git", "config", "user.email", "chaaya.visa@gmail.com"], check=True)
             subprocess.run(["git", "config", "user.name", "AI Content Bot"], check=True)
             subprocess.run(["git", "add", str(file_path)], check=True)
 
