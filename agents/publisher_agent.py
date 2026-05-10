@@ -74,8 +74,16 @@ export const schema = {schema_json}
 
             msg = f"[bot] Add article: {title[:60]}"
             subprocess.run(["git", "commit", "-m", msg], check=True)
-            subprocess.run(["git", "push"], check=True)
-            log.info("Git commit and push successful")
+            log.info(f"Committed: {title}")
         except subprocess.CalledProcessError as e:
             log.error(f"Git operation failed: {e}")
+            raise
+            
+    def push(self):
+        """Push all commits at once."""
+            try:
+            subprocess.run(["git", "push"], check=True)
+            log.info("Git push successful")
+        except subprocess.CalledProcessError as e:
+            log.error(f"Git push failed: {e}")
             raise
