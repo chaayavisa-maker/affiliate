@@ -50,7 +50,8 @@ class SEOAgent:
                 "name": "AI Tools Hub",
                 "logo": {
                     "@type": "ImageObject",
-                    "url": "https://YOUR_DOMAIN.com/logo.png"
+                    site_url = os.getenv("SITE_URL", "https://affiliate-silk-six.vercel.app")
+                    "url": f"{site_url}/logo.png]}"
                 }
             },
             "mainEntityOfPage": {
@@ -179,7 +180,7 @@ Return ONLY the JSON array."""
 
         today = datetime.utcnow().strftime("%Y-%m-%d")
         new_url = f"""  <url>
-    <loc>https://YOUR_DOMAIN.com/blog/{article["slug"]}</loc>
+    <loc>https://affiliate-silk-six.vercel.app/blog/{article["slug"]}</loc>
     <lastmod>{today}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
