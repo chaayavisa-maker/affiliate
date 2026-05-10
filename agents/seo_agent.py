@@ -6,6 +6,7 @@ Also updates the sitemap and generates Open Graph data.
 import json
 import re
 import time
+import os
 import logging
 from pathlib import Path
 from datetime import datetime
@@ -54,7 +55,8 @@ class SEOAgent:
             },
             "mainEntityOfPage": {
                 "@type": "WebPage",
-                "@id": f"https://YOUR_DOMAIN.com/blog/{article['slug']}"
+                site_url = os.getenv("SITE_URL", "https://affiliate-silk-six.vercel.app")
+                "@id": f"{site_url}/blog/{article['slug']}"
             }
         }
 
