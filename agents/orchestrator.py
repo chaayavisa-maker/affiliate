@@ -59,6 +59,9 @@ def run():
         path = publisher.publish(article)
         published.append(path)
         log.info(f"Published: {path}")
+    # Push all commits in one go
+    if os.getenv("GITHUB_ACTIONS") and published:
+        publisher.push()
 
     log.info(f"\n=== Done. Published {len(published)} articles ===")
     for p in published:
