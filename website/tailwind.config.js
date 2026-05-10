@@ -6,26 +6,21 @@ module.exports = {
   ],
   theme: {
     extend: {
-      colors: {
-        brand: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          900: '#0c4a6e',
-        },
+      fontFamily: {
+        sora: ['Sora', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
       },
-      typography: {
-        DEFAULT: {
-          css: {
-            maxWidth: '72ch',
-            a: {
-              color: '#0ea5e9',
-              '&:hover': { color: '#0284c7' },
-            },
-          },
-        },
+      animation: {
+        fadeUp:   'fadeUp 0.5s ease both',
+        fadeIn:   'fadeIn 0.35s ease both',
+        slideIn:  'slideIn 0.3s ease both',
+        'pulse-dot': 'pulseDot 2s ease-in-out infinite',
+      },
+      keyframes: {
+        fadeUp:  { from: { opacity: '0', transform: 'translateY(14px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
+        fadeIn:  { from: { opacity: '0' }, to: { opacity: '1' } },
+        slideIn: { from: { opacity: '0', transform: 'translateX(-100%)' }, to: { opacity: '1', transform: 'translateX(0)' } },
+        pulseDot: { '0%,100%': { opacity: '1' }, '50%': { opacity: '0.4' } },
       },
     },
   },
