@@ -3,25 +3,18 @@ import { format } from 'date-fns';
 import NewsletterForm from '@/components/NewsletterForm';
 
 const CATEGORY_META: Record<string, { icon: string; label: string; desc: string; color: string }> = {
-  writing:      { icon: '✍️', label: 'AI Writing',      desc: 'Copywriting, blogs, essays',     color: 'from-violet-100 to-purple-100' },
-  coding:       { icon: '💻', label: 'AI Coding',        desc: 'Autocomplete, code review',      color: 'from-blue-100 to-cyan-100' },
-  design:       { icon: '🎨', label: 'AI Design',        desc: 'Images, art, design assets',     color: 'from-pink-100 to-rose-100' },
-  chatbots:     { icon: '💬', label: 'AI Chatbots',      desc: 'GPT alternatives, assistants',   color: 'from-green-100 to-emerald-100' },
-  video:        { icon: '🎬', label: 'AI Video',         desc: 'Video creation and editing',     color: 'from-orange-100 to-amber-100' },
-  productivity: { icon: '⚡', label: 'AI Productivity',  desc: 'Automation, notes, summaries',   color: 'from-yellow-100 to-lime-100' },
+  writing:      { icon: '✍️', label: 'AI Writing',     desc: 'Copywriting, blogs, essays',    color: 'from-violet-100 to-purple-100' },
+  coding:       { icon: '💻', label: 'AI Coding',       desc: 'Autocomplete, code review',     color: 'from-blue-100 to-cyan-100' },
+  design:       { icon: '🎨', label: 'AI Design',       desc: 'Images, art, design assets',    color: 'from-pink-100 to-rose-100' },
+  chatbots:     { icon: '💬', label: 'AI Chatbots',     desc: 'GPT alternatives, assistants',  color: 'from-green-100 to-emerald-100' },
+  video:        { icon: '🎬', label: 'AI Video',        desc: 'Video creation and editing',    color: 'from-orange-100 to-amber-100' },
+  productivity: { icon: '⚡', label: 'AI Productivity', desc: 'Automation, notes, summaries',  color: 'from-yellow-100 to-lime-100' },
 };
 
-const STATS = [
-  { value: '200+', label: 'Tools Reviewed' },
-  { value: '50K+', label: 'Monthly Readers' },
-  { value: '100%', label: 'Independent' },
-  { value: 'Daily', label: 'Content Updates' },
-];
-
 const TOP_TOOLS = [
-  { name: 'Jasper AI', cat: 'Writing', rating: 4.8, badge: '🏆 Top Pick', cta: 'Try Free 7 Days', url: 'https://www.jasper.ai', price: 'From $49/mo' },
-  { name: 'GitHub Copilot', cat: 'Coding', rating: 4.8, badge: '🏆 Top Pick', cta: 'Start Free Trial', url: 'https://github.com/features/copilot', price: 'From $10/mo' },
-  { name: 'ChatGPT Plus', cat: 'Chatbot', rating: 4.8, badge: '🏆 Top Pick', cta: 'Get ChatGPT Plus', url: 'https://chat.openai.com', price: '$20/mo' },
+  { name: 'Jasper AI',       cat: 'Writing', rating: 4.8, badge: '🏆 Top Pick', cta: 'Try Free 7 Days', url: 'https://www.jasper.ai', price: 'From $49/mo' },
+  { name: 'GitHub Copilot',  cat: 'Coding',  rating: 4.8, badge: '🏆 Top Pick', cta: 'Start Free Trial', url: 'https://github.com/features/copilot', price: 'From $10/mo' },
+  { name: 'ChatGPT Plus',    cat: 'Chatbot', rating: 4.8, badge: '🏆 Top Pick', cta: 'Get ChatGPT Plus', url: 'https://chat.openai.com', price: '$20/mo' },
 ];
 
 export default function HomePage() {
@@ -30,26 +23,29 @@ export default function HomePage() {
   const recent = posts.slice(3, 9);
   const categories = Object.entries(CATEGORY_META);
 
+  // Honest stats derived from real data
+  const reviewCount = posts.length;
+  const categoryCount = [...new Set(posts.map(p => p.category))].length;
+
   return (
     <>
       {/* ── Hero ── */}
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white py-24 px-4">
-        {/* Background decoration */}
-        <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div className="absolute top-10 left-1/4 w-96 h-96 bg-blue-500 rounded-full blur-3xl" />
           <div className="absolute bottom-10 right-1/4 w-64 h-64 bg-violet-500 rounded-full blur-3xl" />
         </div>
         <div className="relative max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-blue-500/20 border border-blue-400/30 rounded-full px-4 py-1.5 text-blue-300 text-sm font-medium mb-6 animate-fadeUp">
             <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse inline-block" />
-            Updated daily · Independent reviews
+            Independent reviews · No paid placements
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight animate-fadeUp delay-100" style={{fontFamily:'Sora,sans-serif'}}>
             Find the Best AI Tools<br />
             <span className="gradient-text">Without the Hype</span>
           </h1>
           <p className="text-lg text-slate-300 mb-8 max-w-2xl mx-auto animate-fadeUp delay-200">
-            We test hundreds of AI tools with real accounts — honest reviews, real benchmarks, no paid placements.
+            We test AI tools with real accounts — honest reviews, real benchmarks, zero paid placements.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center animate-fadeUp delay-300">
             <a href="/blog" className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3.5 rounded-xl font-semibold transition-colors shadow-lg shadow-blue-900/30">
@@ -59,19 +55,29 @@ export default function HomePage() {
               Tools Directory
             </a>
           </div>
-          {/* Stats row */}
+          {/* Real stats — derived from actual content */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-14 animate-fadeUp delay-400">
-            {STATS.map((s) => (
-              <div key={s.label} className="bg-white/5 border border-white/10 rounded-2xl py-4 px-3">
-                <p className="text-2xl font-bold text-white" style={{fontFamily:'Sora,sans-serif'}}>{s.value}</p>
-                <p className="text-slate-400 text-xs mt-1">{s.label}</p>
-              </div>
-            ))}
+            <div className="bg-white/5 border border-white/10 rounded-2xl py-4 px-3">
+              <p className="text-2xl font-bold text-white" style={{fontFamily:'Sora,sans-serif'}}>{reviewCount}</p>
+              <p className="text-slate-400 text-xs mt-1">In-depth reviews</p>
+            </div>
+            <div className="bg-white/5 border border-white/10 rounded-2xl py-4 px-3">
+              <p className="text-2xl font-bold text-white" style={{fontFamily:'Sora,sans-serif'}}>{categoryCount}</p>
+              <p className="text-slate-400 text-xs mt-1">Tool categories</p>
+            </div>
+            <div className="bg-white/5 border border-white/10 rounded-2xl py-4 px-3">
+              <p className="text-2xl font-bold text-white" style={{fontFamily:'Sora,sans-serif'}}>100%</p>
+              <p className="text-slate-400 text-xs mt-1">Independent editorial</p>
+            </div>
+            <div className="bg-white/5 border border-white/10 rounded-2xl py-4 px-3">
+              <p className="text-2xl font-bold text-white" style={{fontFamily:'Sora,sans-serif'}}>$0</p>
+              <p className="text-slate-400 text-xs mt-1">Paid placements</p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── Top Picks Quick-Compare ── */}
+      {/* ── Top Picks ── */}
       <section className="max-w-6xl mx-auto px-4 py-14">
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -91,7 +97,7 @@ export default function HomePage() {
                 <span className="text-xs font-bold bg-amber-100 text-amber-700 border border-amber-200 px-2 py-1 rounded-lg whitespace-nowrap">{tool.badge}</span>
               </div>
               <div className="flex items-center gap-2 mb-4">
-                <span className="text-amber-400 text-base">{'★'.repeat(Math.round(tool.rating))}</span>
+                <span className="text-amber-400">{'★'.repeat(Math.round(tool.rating))}</span>
                 <span className="text-slate-600 font-semibold text-sm">{tool.rating}</span>
                 <span className="text-slate-400 text-sm ml-auto">{tool.price}</span>
               </div>
@@ -114,10 +120,10 @@ export default function HomePage() {
             </div>
             <div className="grid md:grid-cols-3 gap-6">
               {featured.map((post, i) => {
-                const meta = CATEGORY_META[post.category] ?? { icon: '🤖', color: 'from-slate-100 to-gray-100', label: post.category };
+                const meta = CATEGORY_META[post.category] ?? { icon: '🤖', color: 'from-slate-100 to-gray-100', label: post.category, desc: '' };
                 return (
                   <a key={post.slug} href={`/blog/${post.slug}`}
-                    className={`group bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden card-hover animate-fadeUp`}
+                    className="group bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden card-hover animate-fadeUp"
                     style={{animationDelay:`${i*0.1}s`}}>
                     <div className={`bg-gradient-to-br ${meta.color} h-40 flex items-center justify-center text-5xl`}>
                       {meta.icon}
@@ -126,7 +132,7 @@ export default function HomePage() {
                       <span className="inline-block bg-blue-50 text-blue-700 text-xs font-semibold px-2.5 py-1 rounded-full mb-2.5 capitalize">
                         {meta.label}
                       </span>
-                      <h3 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-2 mb-2 text-base" style={{fontFamily:'Sora,sans-serif'}}>
+                      <h3 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-2 mb-2" style={{fontFamily:'Sora,sans-serif'}}>
                         {post.title}
                       </h3>
                       <p className="text-slate-500 text-sm line-clamp-2 mb-3">{post.description}</p>
@@ -144,7 +150,7 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* ── Browse by Category ── */}
+      {/* ── Categories ── */}
       <section className="max-w-6xl mx-auto px-4 py-14">
         <h2 className="text-2xl font-bold text-slate-900 mb-8" style={{fontFamily:'Sora,sans-serif'}}>Browse by Category</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -171,7 +177,7 @@ export default function HomePage() {
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               {recent.map((post) => {
-                const meta = CATEGORY_META[post.category] ?? { icon: '🤖', color: 'from-slate-100 to-gray-100', label: post.category };
+                const meta = CATEGORY_META[post.category] ?? { icon: '🤖', color: 'from-slate-100 to-gray-100', label: post.category, desc: '' };
                 return (
                   <a key={post.slug} href={`/blog/${post.slug}`}
                     className="flex gap-4 bg-white rounded-xl border border-slate-200 p-4 hover:shadow-sm hover:border-blue-200 transition-all group card-hover">
@@ -203,12 +209,12 @@ export default function HomePage() {
           <p className="text-slate-500 text-sm font-medium uppercase tracking-wide mb-8">Why readers trust us</p>
           <div className="grid md:grid-cols-4 gap-6">
             {[
-              { icon: '🔬', title: 'Real Testing', desc: 'Every tool is tested with a live account — no screenshots or press kits.' },
-              { icon: '💰', title: 'Zero Paid Reviews', desc: 'Rankings are 100% merit-based. No tool can buy a better score.' },
+              { icon: '🔬', title: 'Real Testing', desc: 'Every tool tested with a live account — no screenshots or press kits.' },
+              { icon: '💰', title: 'No Paid Reviews', desc: 'Rankings are 100% merit-based. No tool can buy a better score.' },
               { icon: '🔄', title: 'Always Current', desc: 'We update reviews when tools change pricing, features, or quality.' },
               { icon: '📖', title: 'Full Transparency', desc: 'Affiliate links are clearly disclosed on every page, always.' },
             ].map((item) => (
-              <div key={item.title} className="text-center">
+              <div key={item.title}>
                 <div className="text-3xl mb-3">{item.icon}</div>
                 <p className="font-bold text-slate-900 mb-2" style={{fontFamily:'Sora,sans-serif'}}>{item.title}</p>
                 <p className="text-slate-500 text-sm">{item.desc}</p>
@@ -224,10 +230,10 @@ export default function HomePage() {
           <div className="text-4xl mb-4">📬</div>
           <h2 className="text-3xl font-bold mb-3" style={{fontFamily:'Sora,sans-serif'}}>Get the Best AI Tools Every Week</h2>
           <p className="text-slate-300 mb-8 text-lg">
-            Join 50,000+ readers getting honest reviews and money-saving deals every Thursday.
+            New reviews, honest comparisons, and money-saving deals — delivered every Thursday.
           </p>
           <NewsletterForm dark />
-          <p className="text-slate-500 text-xs mt-4">No spam. Unsubscribe anytime. Read by founders, marketers & developers.</p>
+          <p className="text-slate-500 text-xs mt-4">No spam. Unsubscribe anytime.</p>
         </div>
       </section>
 
