@@ -66,7 +66,15 @@ class ContentAgent:
     def __init__(self, groq_api_key: str):
         self.client = Groq(api_key=groq_api_key)
 
-    def write_article(self, keyword_data: dict) -> dict:
+    def write_article(self, keyword_data: dict, correction_brief: str = "") -> dict:
+        """
+        Generate a complete affiliate review article for the given keyword.
+
+        Args:
+            keyword_data:     Dict from KeywordAgent with 'keyword', 'intent', etc.
+            correction_brief: Non-empty string on retries — contains guardrail failure
+                              details so the model can fix specific problems.
+        """
         keyword = keyword_data["keyword"]
         products = _pick_products(keyword)
         products_text = "\n".join(
@@ -74,7 +82,16 @@ class ContentAgent:
             for p in products
         )
 
-        prompt = f"""You are an expert tech writer creating an affiliate review article.
+        # On retries, prepend the correction brief so the model knows what to fix
+        retry_block = ""
+        if correction_brief:
+            retry_block = (
+                f"\n\nCRITICAL — THIS IS A RETRY. A previous draft was rejected. "
+                f"You MUST address ALL of the following issues in this new draft:\n"
+                f"{correction_brief}\n"
+            )
+
+        prompt = f"""You are an expert tech writer creating an affiliate review article.{retry_block}
 
 KEYWORD TARGET: "{keyword}"
 CURRENT YEAR: {datetime.utcnow().year}
