@@ -1,0 +1,13 @@
+# Next.js
+website/.next/
+website/node_modules/
+website/.env.local
+ 
+# Python
+agents/__pycache__/
+agents/*.pyc
+*.pyc
+ 
+# Config with secrets
+.env
+ 
