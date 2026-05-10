@@ -1,5 +1,6 @@
 import { getAllPosts } from '@/lib/posts';
 import { format } from 'date-fns';
+import NewsletterForm from '@/components/NewsletterForm';
 
 export default function HomePage() {
   const posts = getAllPosts();
@@ -131,14 +132,7 @@ export default function HomePage() {
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">Get the Best AI Tools Every Week</h2>
           <p className="text-sky-200 mb-6">Join 5,000+ professionals getting our curated picks, honest reviews, and money-saving deals.</p>
-          <form className="flex gap-3 max-w-md mx-auto" onSubmit={(e) => e.preventDefault()}>
-            <input type="email" placeholder="your@email.com"
-              className="flex-1 px-4 py-3 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-sky-400" />
-            <button type="submit"
-              className="bg-sky-500 hover:bg-sky-400 text-white px-6 py-3 rounded-xl font-semibold transition-colors whitespace-nowrap">
-              Subscribe
-            </button>
-          </form>
+          <NewsletterForm />
           <p className="text-sky-400 text-sm mt-3">No spam. Unsubscribe anytime.</p>
         </div>
       </section>
