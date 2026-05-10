@@ -153,7 +153,7 @@ Rules:
 - 50-60 characters
 - Include the main keyword
 - Use a power word (Best, Ultimate, Complete, Top)
-- Use current year (2025)
+- Use current year ({datetime.utcnow().year})
 Return ONLY the title, nothing else."""
 
         title_response = self.client.chat.completions.create(
