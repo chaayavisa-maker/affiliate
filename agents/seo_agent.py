@@ -43,21 +43,19 @@ class SEOAgent:
             "author": {
                 "@type": "Organization",
                 "name": "AI Tools Hub",
-                "url": "https://YOUR_DOMAIN.com"
+                "url": "https://affiliate-silk-six.vercel.app"
             },
             "publisher": {
                 "@type": "Organization",
                 "name": "AI Tools Hub",
                 "logo": {
                     "@type": "ImageObject",
-                    site_url = os.getenv("SITE_URL", "https://affiliate-silk-six.vercel.app")
-                    "url": f"{site_url}/logo.png]}"
+                    "url": "https://affiliate-silk-six.vercel.app/logo.png"
                 }
             },
             "mainEntityOfPage": {
                 "@type": "WebPage",
-                site_url = os.getenv("SITE_URL", "https://affiliate-silk-six.vercel.app")
-                "@id": f"{site_url}/blog/{article['slug']}"
+                "@id": f"https://affiliate-silk-six.vercel.app}/blog/{article['slug']}"
             }
         }
 
