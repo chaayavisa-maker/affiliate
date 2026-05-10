@@ -12,23 +12,44 @@ export function Thead(props: HTMLAttributes<HTMLTableSectionElement>) {
   return <thead className="bg-sky-600 text-white" {...props} />;
 }
 
+export function Tbody(props: HTMLAttributes<HTMLTableSectionElement>) {
+  return <tbody {...props} />;
+}
+
 export function Th(props: ThHTMLAttributes<HTMLTableCellElement>) {
-  return <th className="px-4 py-3 text-left font-semibold text-sm whitespace-nowrap text-white" {...props} />;
+  return (
+    <th
+      className="px-4 py-3 text-left font-semibold text-sm whitespace-nowrap text-white"
+      {...props}
+    />
+  );
+}
+
+export function Tr(props: HTMLAttributes<HTMLTableRowElement>) {
+  return (
+    <tr
+      className="hover:bg-sky-50 transition-colors even:bg-gray-50"
+      {...props}
+    />
+  );
 }
 
 export function Td(props: TdHTMLAttributes<HTMLTableCellElement>) {
   const text = String(props.children ?? '');
   const isStars = /^[★☆]+$/.test(text.trim());
-  const isFree = text.toLowerCase().includes('free') || text.includes('✓');
+  const isFree =
+    text.toLowerCase().includes('free') || text.includes('✓');
   const isPrice = text.includes('$');
 
   return (
     <td className="px-4 py-3 border-t border-gray-100 align-middle">
       {isStars ? (
-        <span className="text-amber-400 text-base tracking-tight">{props.children}</span>
+        <span className="text-amber-400 text-base tracking-tight">
+          {props.children}
+        </span>
       ) : isFree ? (
         <span className="inline-flex items-center gap-1 bg-green-100 text-green-700 text-xs font-medium px-2 py-0.5 rounded-full">
-          ✓ {props.children}
+          {props.children}
         </span>
       ) : isPrice ? (
         <span className="font-semibold text-gray-900">{props.children}</span>
@@ -38,5 +59,3 @@ export function Td(props: TdHTMLAttributes<HTMLTableCellElement>) {
     </td>
   );
 }
-
-export function Tr(props: HTMLAttributes<HTMLTableRowEl
