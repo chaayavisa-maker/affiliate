@@ -73,7 +73,7 @@ export default function ToolsPage() {
       {/* Header */}
       <div className="mb-10">
         <h1 className="text-3xl font-bold text-slate-900 mb-2" style={{fontFamily:'Sora,sans-serif'}}>AI Tools Directory</h1>
-        <p className="text-slate-500">Browse and compare {TOOLS.length}+ AI tools, ranked by our editorial team.</p>
+        <p className="text-slate-500">Browse and compare the best AI tools, ranked by our editorial team.</p>
       </div>
 
       {/* Filters bar */}
