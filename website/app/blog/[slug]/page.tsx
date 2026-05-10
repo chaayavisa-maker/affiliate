@@ -1,5 +1,6 @@
 import { getAllPosts, getPostBySlug } from '@/lib/posts';
 import { MDXRemote } from 'next-mdx-remote/rsc';
+import { Table, Thead, Th, Td, Tr } from '@/components/mdx/Table';
 import { notFound } from 'next/navigation';
 import { format } from 'date-fns';
 import type { Metadata } from 'next';
@@ -80,7 +81,16 @@ export default function PostPage({ params }: Props) {
 
           {/* Article body */}
           <div className="prose max-w-none">
-            <MDXRemote source={post.content} />
+            <MDXRemote
+  source={post.content}
+  components={{
+    table: Table,
+    thead: Thead,
+    th: Th,
+    td: Td,
+    tr: Tr,
+  }}
+/>
           </div>
 
           {/* Tags */}
