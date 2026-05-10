@@ -81,7 +81,7 @@ export const schema = {schema_json}
             
     def push(self):
         """Push all commits at once."""
-            try:
+        try:
             subprocess.run(["git", "push"], check=True)
             log.info("Git push successful")
         except subprocess.CalledProcessError as e:
