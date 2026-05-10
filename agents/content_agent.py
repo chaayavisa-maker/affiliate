@@ -77,6 +77,7 @@ class ContentAgent:
         prompt = f"""You are an expert tech writer creating an affiliate review article.
 
 KEYWORD TARGET: "{keyword}"
+CURRENT YEAR: {datetime.utcnow().year}
 PRODUCTS TO REVIEW:
 {products_text}
 
@@ -116,6 +117,8 @@ IMPORTANT RULES:
 - Format affiliate links as: [Tool Name](ACTUAL_URL) — use the exact URLs provided
 - Be honest: mention real limitations of each tool
 - Add exact pricing from the product list above
+- Use {datetime.utcnow().year} as the current year throughout the article, not 2024 or 2025
+
 
 Return the full article in markdown format, starting with the Introduction heading.
 Do NOT include frontmatter — that will be added separately."""
