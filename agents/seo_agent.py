@@ -55,7 +55,7 @@ class SEOAgent:
             },
             "mainEntityOfPage": {
                 "@type": "WebPage",
-                "@id": f"https://affiliate-silk-six.vercel.app}/blog/{article['slug']}"
+                "@id": f"https://affiliate-silk-six.vercel.app/blog/{article['slug']}"
             }
         }
 
