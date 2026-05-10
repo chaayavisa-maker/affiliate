@@ -89,7 +89,7 @@ catch { git remote set-url origin $GITHUB_REPO }
 git add .
 git commit -m "Initial commit: AI Tools Hub autonomous affiliate site"
 git branch -M main
-git push -u origin main
+git push -u origin main --force
 Write-Green "OK Code pushed to GitHub"
 
 # ---- Set GitHub Secrets ----
