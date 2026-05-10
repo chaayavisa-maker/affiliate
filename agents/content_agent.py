@@ -98,53 +98,61 @@ CURRENT YEAR: {datetime.utcnow().year}
 PRODUCTS TO REVIEW:
 {products_text}
 
-Write a complete, 1600-word SEO-optimized article. Follow this structure EXACTLY:
+⚠️  LENGTH REQUIREMENT: The finished article MUST be at least 1,400 words.
+    Do NOT summarise or shorten any section. Write every section in full.
+    If you finish early, expand each tool review with more detail until you hit 1,400 words.
 
-1. ## Introduction (150 words)
-   - Hook with a relatable pain point
-   - Briefly mention the tools you'll cover
-   - Include the primary keyword naturally in the first 100 words
+Write the article following this structure. Word targets are MINIMUMS — exceed them freely:
 
-2. ## What to Look for in [Category] (200 words)  
-   - 4-5 key criteria buyers care about (pricing, ease of use, features, integrations)
+## Introduction  [MINIMUM 180 words]
+Write 2-3 paragraphs. Open with a relatable pain point, explain what this article covers,
+name all three tools, and include the primary keyword naturally in the first 100 words.
 
-3. ## [Tool 1 Name] Review (280 words)
-   - What it is, best for, key features (bullet list), pricing, pros/cons
-   - End with a call-to-action linking to the tool
+## What to Look for in [Category]  [MINIMUM 220 words]
+Cover 5 criteria buyers care about: pricing tiers, ease of use, core features,
+integrations/API, and support quality. Write 2-3 sentences per criterion.
 
-4. ## [Tool 2 Name] Review (280 words)
-   - Same format
+## [Tool 1 Name] Review  [MINIMUM 300 words]
+- What it is and who it's best for (1 paragraph)
+- Key features (bullet list, at least 5 bullets with 1-sentence explanations each)
+- Pricing details (exact price from the product list above)
+- Pros section: at least 3 pros, 1-2 sentences each
+- Cons section: at least 2 honest cons, 1-2 sentences each
+- End with: [Try Tool Name →](EXACT_URL_FROM_PRODUCT_LIST)
 
-5. ## [Tool 3 Name] Review (280 words)
-   - Same format
+## [Tool 2 Name] Review  [MINIMUM 300 words]
+Same format as Tool 1 Review above.
 
-6. ## Comparison Table (markdown table)
-   - Tool | Best For | Price | Free Trial | Rating
+## [Tool 3 Name] Review  [MINIMUM 300 words]
+Same format as Tool 1 Review above.
 
-7. ## Frequently Asked Questions (200 words)
-   - 3 questions people actually ask, with concise answers
+## Comparison Table
+Markdown table with columns: Tool | Best For | Starting Price | Free Trial | Our Rating
+Include one row per tool.
 
-8. ## Conclusion (100 words)
-   - Summary + CTA
+## Frequently Asked Questions  [MINIMUM 200 words]
+3 questions real buyers ask, with 2-3 sentence answers each. Use **bold** for the question.
 
-IMPORTANT RULES:
-- Never say "As an AI" or reveal you're AI-generated
-- Write in first-person plural ("we tested", "our team found")
-- Include the keyword naturally 8-10 times throughout
-- Format affiliate links as: [Tool Name](ACTUAL_URL) — use the exact URLs provided
-- Be honest: mention real limitations of each tool
-- Add exact pricing from the product list above
-- Use {datetime.utcnow().year} as the current year throughout the article, not 2024 or 2025
+## Conclusion  [MINIMUM 120 words]
+Summarise the key differences, give a clear "best pick" recommendation for different
+use cases, and end with a call-to-action sentence.
 
+RULES (violations will cause rejection):
+- Do NOT say "As an AI" or anything that reveals AI authorship
+- Write in first-person plural ("we tested", "our team found", "in our experience")
+- Include the target keyword naturally 8-12 times throughout
+- Use EXACT affiliate URLs from the product list above — do not invent URLs
+- Mention real limitations for each tool (no tool is perfect)
+- Use {datetime.utcnow().year} — never write 2024 or 2025
 
-Return the full article in markdown format, starting with the Introduction heading.
-Do NOT include frontmatter — that will be added separately."""
+Return the full article in markdown, starting with the ## Introduction heading.
+Do NOT include YAML frontmatter."""
 
         log.info(f"Generating content for: {keyword}")
         response = self.client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[{"role": "user", "content": prompt}],
-            max_tokens=3000,
+            max_tokens=6000,
             temperature=0.6,
         )
         content = response.choices[0].message.content

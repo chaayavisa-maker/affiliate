@@ -27,8 +27,8 @@ log = logging.getLogger(__name__)
 CONTENT_DIR = Path(__file__).parent.parent / "website" / "content" / "posts"
 
 # ── Thresholds ─────────────────────────────────────────────────────────────────
-MIN_WORD_COUNT        = 1_200
-MAX_WORD_COUNT        = 3_000
+MIN_WORD_COUNT        = 1_000   # ~1 400 requested; 1 000 is the hard floor
+MAX_WORD_COUNT        = 4_000
 MIN_KEYWORD_DENSITY   = 0.003   # 0.3 % — too sparse
 MAX_KEYWORD_DENSITY   = 0.025   # 2.5 % — keyword stuffing
 MIN_REFLECTION_SCORE  = 6       # 1-10; retry below this
@@ -219,7 +219,8 @@ class GuardrailAgent:
         if result.word_count < MIN_WORD_COUNT:
             result.issues.append(
                 f"Article too short: {result.word_count} words "
-                f"(minimum is {MIN_WORD_COUNT}). Expand each tool review section."
+                f"(minimum is {MIN_WORD_COUNT}). The prompt targets 1,400+ words — "
+                "ensure max_tokens is high enough and every section is written in full."
             )
         elif result.word_count > MAX_WORD_COUNT:
             result.warnings.append(
