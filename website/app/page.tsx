@@ -131,7 +131,7 @@ export default function HomePage() {
       <section className="bg-sky-900 text-white py-16 px-4">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">Get the Best AI Tools Every Week</h2>
-          <p className="text-sky-200 mb-6">Join 5,000+ professionals getting our curated picks, honest reviews, and money-saving deals.</p>
+          <p className="text-sky-200 mb-6">"Be the first to get weekly picks, honest reviews, and money-saving deals.</p>
           <NewsletterForm />
           <p className="text-sky-400 text-sm mt-3">No spam. Unsubscribe anytime.</p>
         </div>
