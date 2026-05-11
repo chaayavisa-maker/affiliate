@@ -26,7 +26,7 @@ LOGO_URL: str   = f"{SITE_URL}/logo.png"
 AUTHOR_NAME: str = f"{SITE_NAME} Editorial Team"
 
 # Git identity used when the bot commits updated/new articles
-BOT_GIT_EMAIL: str = "bot@aitoolshub.ai"
+BOT_GIT_EMAIL: str = "chaaya.visa@gmail.com
 BOT_GIT_NAME: str  = "AI Content Bot"
 
 
