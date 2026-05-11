@@ -52,7 +52,7 @@ def _ddg_search(query: str, max_results: int = 6) -> list[dict]:
     Works without any API key.
     """
     try:
-        from duckduckgo_search import DDGS
+        from ddgs import DDGS
         with DDGS() as ddgs:
             results = ddgs.text(query, max_results=max_results, timelimit="m")  # m = last month
             return list(results) if results else []
