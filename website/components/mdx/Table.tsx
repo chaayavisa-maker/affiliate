@@ -28,7 +28,7 @@ export function Th(props: ThHTMLAttributes<HTMLTableCellElement>) {
 export function Tr(props: HTMLAttributes<HTMLTableRowElement>) {
   return (
     <tr
-      className="hover:bg-sky-50 transition-colors even:bg-gray-50"
+      className="hover:bg-sky-50 transition-colors even:bg-gray-50 first:bg-amber-50 first:font-medium"
       {...props}
     />
   );
@@ -36,19 +36,32 @@ export function Tr(props: HTMLAttributes<HTMLTableRowElement>) {
 
 export function Td(props: TdHTMLAttributes<HTMLTableCellElement>) {
   const text = String(props.children ?? '');
-  const isStars = /^[★☆]+$/.test(text.trim());
-  const isFree =
-    text.toLowerCase().includes('free') || text.includes('✓');
-  const isPrice = text.includes('$');
+  const trimmed = text.trim();
+
+  // Star ratings — ★ and ☆ only
+  const isStars = /^[★☆]+$/.test(trimmed) && trimmed.length >= 1 && trimmed.length <= 10;
+
+  // ✓ free tier / trial — green badge
+  const isFree = trimmed.startsWith('✓');
+
+  // ✗ paid only — muted badge
+  const isPaid = trimmed.startsWith('✗');
+
+  // $ price — bold
+  const isPrice = trimmed.startsWith('$');
 
   return (
     <td className="px-4 py-3 border-t border-gray-100 align-middle">
       {isStars ? (
-        <span className="text-amber-400 text-base tracking-tight">
+        <span className="text-amber-400 text-base tracking-tight" aria-label={trimmed}>
           {props.children}
         </span>
       ) : isFree ? (
-        <span className="inline-flex items-center gap-1 bg-green-100 text-green-700 text-xs font-medium px-2 py-0.5 rounded-full">
+        <span className="inline-flex items-center gap-1 bg-green-100 text-green-700 text-xs font-medium px-2 py-0.5 rounded-full whitespace-nowrap">
+          {props.children}
+        </span>
+      ) : isPaid ? (
+        <span className="inline-flex items-center gap-1 bg-gray-100 text-gray-500 text-xs font-medium px-2 py-0.5 rounded-full whitespace-nowrap">
           {props.children}
         </span>
       ) : isPrice ? (

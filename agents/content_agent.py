@@ -180,8 +180,19 @@ Same format as Tool 1 Review above.
 Same format as Tool 1 Review above.
 
 ## Comparison Table
-Markdown table with columns: Tool | Best For | Starting Price | Free Trial | Our Rating
-Include one row per tool.
+Rich markdown table with these EXACT columns:
+Tool | Best For | Price | Free Plan | Key Strength | Ease of Use | Our Rating
+
+Column rules:
+- "Price": exact price like "$49/mo" — no extra words (renders bold automatically)
+- "Free Plan": write "✓ Free tier" or "✓ X-day trial" when a free option exists;
+  write "✗ Paid only" when there is none (✓ renders as a green badge)
+- "Key Strength": single killer feature, max 6 words (e.g. "Brand Voice AI")
+- "Ease of Use": star rating using ★ (filled) and ☆ (empty), e.g. "★★★★☆" for 4/5
+  (these render in amber automatically)
+- "Our Rating": same star format as Ease of Use
+- "Best For": short audience phrase, max 5 words
+- Put the best overall tool in the first data row
 
 ## Frequently Asked Questions  [MINIMUM 200 words]
 3 questions real buyers ask, with 2-3 sentence answers each. Use **bold** for the question.
