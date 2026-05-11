@@ -61,10 +61,11 @@ BANNED_PHRASES = [
 @dataclass
 class GuardrailResult:
     passed: bool
-    score: int                          # 0-10 overall reflection score
-    issues: list[str] = field(default_factory=list)    # hard failures — block publish
-    warnings: list[str] = field(default_factory=list)  # soft warnings — log only
-    reflection_feedback: str = ""       # full JSON feedback from self-reflection
+    score: int                                          # 0-10 overall reflection score
+    issues: list[str] = field(default_factory=list)             # hard failures — block publish
+    warnings: list[str] = field(default_factory=list)           # soft warnings — log only
+    non_retryable_issues: list[str] = field(default_factory=list)  # abort immediately, no retry
+    reflection_feedback: str = ""                       # full JSON feedback from self-reflection
     word_count: int = 0
     keyword_density: float = 0.0
 
@@ -73,8 +74,11 @@ class GuardrailResult:
             f"Score: {self.score}/10  |  Passed: {self.passed}",
             f"Word count: {self.word_count}  |  Keyword density: {self.keyword_density:.2%}",
         ]
+        if self.non_retryable_issues:
+            lines.append("NON-RETRYABLE (abort immediately):")
+            lines.extend(f"  ⛔ {i}" for i in self.non_retryable_issues)
         if self.issues:
-            lines.append("HARD FAILURES:")
+            lines.append("HARD FAILURES (retryable):")
             lines.extend(f"  ✗ {i}" for i in self.issues)
         if self.warnings:
             lines.append("Warnings:")
@@ -91,10 +95,84 @@ class GuardrailAgent:
 
     # ── Public API ─────────────────────────────────────────────────────────────
 
+    def is_duplicate_title(self, title: str) -> tuple[bool, str]:
+        """
+        Lightweight pre-flight check: is this title too close to any existing article?
+        Designed to be called BEFORE content generation so no tokens are wasted.
+        Returns (is_duplicate, reason).
+        """
+        if not title:
+            return False, ""
+
+        existing_titles: list[str] = []
+        if CONTENT_DIR.exists():
+            for mdx in CONTENT_DIR.glob("*.mdx"):
+                try:
+                    text = mdx.read_text(encoding="utf-8", errors="ignore")
+                    m = re.search(r'^title:\s*"(.+)"', text, re.MULTILINE)
+                    if m:
+                        existing_titles.append(m.group(1).strip())
+                except Exception:
+                    pass
+
+        if not existing_titles:
+            return False, ""
+
+        # Also check slug collision
+        new_slug = re.sub(r'[^a-z0-9\s-]', '', title.lower())
+        new_slug = re.sub(r'\s+', '-', new_slug.strip())[:80]
+        for mdx in CONTENT_DIR.glob("*.mdx"):
+            try:
+                text = mdx.read_text(encoding="utf-8", errors="ignore")
+                m = re.search(r'^slug:\s*(.+)', text, re.MULTILINE)
+                if m and m.group(1).strip() == new_slug:
+                    return True, f"Exact slug collision with existing post: '{new_slug}'"
+            except Exception:
+                pass
+
+        prompt = f"""You are a content strategy editor. Decide whether a proposed new article
+substantially duplicates any article already on the site.
+
+Proposed title: "{title}"
+
+Existing article titles:
+{json.dumps(existing_titles, indent=2)}
+
+DUPLICATE if: the new article would review essentially the same tools for the same audience.
+NOT a duplicate if: it targets a clearly different use-case, audience segment, or tool set.
+A year change alone does NOT make it unique.
+
+Reply with ONLY valid JSON (no markdown):
+{{"is_duplicate": true_or_false, "similar_to": "closest existing title or null", "reason": "one sentence"}}"""
+
+        try:
+            resp = self.client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[{"role": "user", "content": prompt}],
+                max_tokens=150,
+                temperature=0.1,
+            )
+            raw = resp.choices[0].message.content
+            m = re.search(r'\{.*\}', raw, re.DOTALL)
+            if not m:
+                return False, "parse error"
+            data = json.loads(m.group())
+            time.sleep(1)
+            return bool(data.get("is_duplicate")), (
+                f"Too similar to \"{data.get('similar_to')}\" — {data.get('reason')}"
+            )
+        except Exception as e:
+            log.warning(f"[Guardrail] is_duplicate_title failed: {e}")
+            return False, ""
+
     def validate(self, article: dict) -> GuardrailResult:
         """
         Run all guardrail passes in order.
         Returns GuardrailResult; article is published only when result.passed is True.
+
+        non_retryable_issues are populated for failures where retrying the same
+        topic can never fix the problem (duplicate topic, completely wrong products).
+        The orchestrator aborts immediately on these without wasting further API calls.
         """
         result = GuardrailResult(passed=False, score=0)
 
@@ -107,7 +185,7 @@ class GuardrailAgent:
         log.info("  [Guardrail] Pass 3: banned phrases")
         self._check_banned_phrases(article, result)
 
-        log.info("  [Guardrail] Pass 4: duplicate topic (semantic)")
+        log.info("  [Guardrail] Pass 4: duplicate topic (safety net)")
         self._check_duplicate_topic(article, result)
 
         log.info("  [Guardrail] Pass 5: LLM fact check")
@@ -118,10 +196,13 @@ class GuardrailAgent:
 
         result.passed = (
             len(result.issues) == 0
+            and len(result.non_retryable_issues) == 0
             and result.score >= MIN_REFLECTION_SCORE
         )
 
         log.info(f"  [Guardrail] Result → {'PASS ✓' if result.passed else 'FAIL ✗'}")
+        for issue in result.non_retryable_issues:
+            log.error(f"  [Guardrail]   ⛔ {issue}")
         for issue in result.issues:
             log.error(f"  [Guardrail]   ✗ {issue}")
         for warn in result.warnings:
@@ -317,9 +398,9 @@ class GuardrailAgent:
         # Also block exact slug collision
         new_slug = article.get("slug", "")
         if new_slug in existing_slugs:
-            result.issues.append(
+            result.non_retryable_issues.append(
                 f"Slug collision: '{new_slug}' already exists on the site. "
-                "This article would overwrite an existing post."
+                "This article would overwrite an existing post. Choose a different topic."
             )
             return  # No need for LLM check — definite collision
 
@@ -356,7 +437,7 @@ Reply with ONLY valid JSON (no markdown, no preamble):
                 return
             data = json.loads(m.group())
             if data.get("is_duplicate"):
-                result.issues.append(
+                result.non_retryable_issues.append(
                     f"Duplicate topic — new article \"{new_title}\" is too similar to "
                     f"existing \"{data.get('similar_to')}\". "
                     f"Reason: {data.get('overlap_reason')}. "

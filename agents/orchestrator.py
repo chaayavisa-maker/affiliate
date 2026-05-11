@@ -1,11 +1,20 @@
 #!/usr/bin/env python3
 """
 Main orchestrator — runs every day via GitHub Actions.
-Pipeline: keyword research → content generation → SEO → guardrail checks → publish.
 
-Guardrail failures trigger a content retry (up to MAX_RETRIES).
-Articles that still fail after retries are skipped and logged; the run continues
-with the next keyword so one bad topic never blocks the whole batch.
+Pipeline:
+  1. Keyword research  (semantic dedup at keyword level)
+  2. Pre-flight check  (title-level duplicate check BEFORE any writing)
+  3. Content generation + SEO  (retried up to MAX_RETRIES on fixable failures)
+  4. Guardrail validation      (format / quality / fact / reflection)
+  5. Publish
+
+Duplicate topics are caught in Step 2 and skipped immediately — no LLM tokens
+are wasted writing an article that will be rejected for topic overlap.
+
+Retries are only triggered for fixable issues (word count, format, banned phrases,
+low reflection score). Non-retryable failures (duplicates, fatal fact errors)
+abort that keyword immediately and move on.
 """
 
 import json
@@ -15,9 +24,9 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-from keyword_agent  import KeywordAgent
-from content_agent  import ContentAgent
-from seo_agent      import SEOAgent
+from keyword_agent   import KeywordAgent
+from content_agent   import ContentAgent
+from seo_agent       import SEOAgent
 from publisher_agent import PublisherAgent
 from guardrail_agent import GuardrailAgent, MAX_RETRIES
 
@@ -40,11 +49,14 @@ def run():
         log.error("GROQ_API_KEY not set — get a free key at console.groq.com")
         sys.exit(1)
 
-    keyword_agent  = KeywordAgent(groq_key)
-    content_agent  = ContentAgent(groq_key)
-    seo_agent      = SEOAgent(groq_key)
+    keyword_agent   = KeywordAgent(groq_key)
+    content_agent   = ContentAgent(groq_key)
+    seo_agent       = SEOAgent(groq_key)
     guardrail_agent = GuardrailAgent(groq_key)
-    publisher      = PublisherAgent()
+    publisher       = PublisherAgent()
+
+    published: list[str] = []
+    skipped:   list[str] = []
 
     # ── Step 1: Keyword research ───────────────────────────────────────────────
     log.info("Step 1: Keyword research (with semantic dedup)")
@@ -54,40 +66,73 @@ def run():
         sys.exit(0)
     log.info(f"Keywords selected: {[k['keyword'] for k in keywords]}")
 
-    published   = []
-    skipped     = []
-
+    # ── Step 2: Pre-flight title duplicate check (zero content-generation cost) ─
+    log.info("Step 2: Pre-flight title generation & duplicate check")
+    viable_keywords = []
     for kw in keywords:
+        log.info(f"  Checking: '{kw['keyword']}'")
+        candidate_title = content_agent.generate_title(kw)
+        if not candidate_title:
+            log.warning(f"  Could not generate title — keeping keyword anyway")
+            viable_keywords.append(kw)
+            continue
+
+        is_dup, reason = guardrail_agent.is_duplicate_title(candidate_title)
+        if is_dup:
+            log.warning(
+                f"  ✗ Pre-flight SKIP — title too similar to an existing article.\n"
+                f"    Proposed : \"{candidate_title}\"\n"
+                f"    Reason   : {reason}"
+            )
+            skipped.append(kw["keyword"])
+        else:
+            log.info(f"  ✓ \"{candidate_title}\" — no duplicate found, proceeding")
+            kw["_preflight_title"] = candidate_title  # cache so write_article can reuse it
+            viable_keywords.append(kw)
+
+    if not viable_keywords:
+        log.error("All candidate topics were duplicates — nothing to write today.")
+        _write_summary(published, skipped)
+        sys.exit(0)
+
+    # ── Steps 3-5: Write → SEO → Guardrail → Publish ──────────────────────────
+    for kw in viable_keywords:
         log.info(f"\n{'='*60}")
         log.info(f"Processing: {kw['keyword']}")
         log.info(f"{'='*60}")
 
-        article        = None
+        article          = None
         guardrail_result = None
         correction_brief = ""
 
-        for attempt in range(1, MAX_RETRIES + 2):  # +2: initial attempt + retries
-            log.info(f"  Content generation attempt {attempt}/{MAX_RETRIES + 1}")
-
-            # ── Step 2: Generate content ───────────────────────────────────────
+        for attempt in range(1, MAX_RETRIES + 2):
+            log.info(f"  Step 3: Content generation (attempt {attempt}/{MAX_RETRIES + 1})")
             article = content_agent.write_article(kw, correction_brief=correction_brief)
 
-            # ── Step 3: SEO optimisation ───────────────────────────────────────
+            log.info("  Step 3b: SEO optimisation")
             article = seo_agent.optimize(article)
 
-            # ── Step 4: Guardrail validation ───────────────────────────────────
-            log.info("  Step 4: Guardrail checks")
+            log.info("  Step 4: Guardrail validation")
             guardrail_result = guardrail_agent.validate(article)
 
             if guardrail_result.passed:
                 log.info(f"  Guardrails PASSED (score {guardrail_result.score}/10) ✓")
-                break  # proceed to publish
+                break
 
             log.warning(
-                f"  Guardrails FAILED on attempt {attempt} "
-                f"(score {guardrail_result.score}/10, "
-                f"{len(guardrail_result.issues)} issue(s))"
+                f"  Guardrails FAILED — attempt {attempt}/{MAX_RETRIES + 1}  "
+                f"score {guardrail_result.score}/10  "
+                f"issues: {len(guardrail_result.issues)}"
             )
+
+            # Non-retryable failures: abort immediately, no point rewriting
+            if guardrail_result.non_retryable_issues:
+                log.error(
+                    f"  Non-retryable failure(s) — aborting '{kw['keyword']}':\n"
+                    + "\n".join(f"    ✗ {i}" for i in guardrail_result.non_retryable_issues)
+                )
+                article = None
+                break
 
             if attempt <= MAX_RETRIES:
                 correction_brief = guardrail_agent.build_retry_instructions(guardrail_result)
@@ -95,21 +140,19 @@ def run():
             else:
                 log.error(
                     f"  Exhausted {MAX_RETRIES} retries for '{kw['keyword']}' — skipping.\n"
-                    f"  Final guardrail summary:\n{guardrail_result.summary()}"
+                    f"  Final summary:\n{guardrail_result.summary()}"
                 )
-                article = None  # signal: do not publish
+                article = None
 
         if article is None:
             skipped.append(kw["keyword"])
             continue
 
-        # ── Step 5: Publish ────────────────────────────────────────────────────
         log.info("  Step 5: Publishing")
         path = publisher.publish(article)
         published.append(path)
         log.info(f"  Published: {path}")
 
-        # Log reflection feedback for monitoring
         if guardrail_result and guardrail_result.reflection_feedback:
             log.info(f"  Editor reflection:\n{guardrail_result.reflection_feedback}")
 
@@ -117,20 +160,23 @@ def run():
     if os.getenv("GITHUB_ACTIONS") and published:
         publisher.push()
 
-    # ── Run summary ────────────────────────────────────────────────────────────
     log.info(f"\n{'='*60}")
-    log.info(f"Run complete — published {len(published)}, skipped {len(skipped)}")
+    log.info(f"Done — published {len(published)}, skipped {len(skipped)}")
     for p in published:
         log.info(f"  ✓  {p}")
     for s in skipped:
-        log.warning(f"  ✗  skipped (failed guardrails): {s}")
+        log.warning(f"  ✗  {s}")
 
+    _write_summary(published, skipped)
+
+
+def _write_summary(published: list, skipped: list):
     summary = {
-        "run_at":              datetime.utcnow().isoformat(),
-        "articles_published":  len(published),
-        "articles_skipped":    len(skipped),
-        "published":           published,
-        "skipped":             skipped,
+        "run_at":             datetime.utcnow().isoformat(),
+        "articles_published": len(published),
+        "articles_skipped":   len(skipped),
+        "published":          published,
+        "skipped":            skipped,
     }
     Path("run_summary.json").write_text(json.dumps(summary, indent=2))
     log.info("Run summary saved to run_summary.json")

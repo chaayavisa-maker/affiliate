@@ -21,38 +21,91 @@ log = logging.getLogger(__name__)
 # - PartnerStack: partnerstack.com (best for SaaS)
 AFFILIATE_PRODUCTS = {
     "writing": [
-        {"name": "Jasper AI", "url": "https://www.jasper.ai?fpr=YOUR_ID", "commission": "30%", "price": "$49/mo"},
-        {"name": "Copy.ai", "url": "https://www.copy.ai?via=YOUR_ID", "commission": "45%", "price": "$49/mo"},
-        {"name": "Writesonic", "url": "https://writesonic.com?via=YOUR_ID", "commission": "30%", "price": "$19/mo"},
+        {"name": "Jasper AI",    "url": "https://www.jasper.ai?fpr=YOUR_ID",         "commission": "30%",         "price": "$49/mo"},
+        {"name": "Copy.ai",      "url": "https://www.copy.ai?via=YOUR_ID",             "commission": "45%",         "price": "$49/mo"},
+        {"name": "Writesonic",   "url": "https://writesonic.com?via=YOUR_ID",          "commission": "30%",         "price": "$19/mo"},
     ],
     "image": [
-        {"name": "Midjourney", "url": "https://midjourney.com", "commission": "N/A", "price": "$10/mo"},
-        {"name": "Adobe Firefly", "url": "https://adobe.com/products/firefly?via=YOUR_ID", "commission": "85%", "price": "$4.99/mo"},
-        {"name": "Canva AI", "url": "https://canva.com/affiliates/YOUR_ID", "commission": "30%", "price": "$15/mo"},
+        {"name": "Midjourney",   "url": "https://midjourney.com",                      "commission": "N/A",         "price": "$10/mo"},
+        {"name": "Adobe Firefly","url": "https://adobe.com/products/firefly?via=YOUR_ID","commission": "85%",       "price": "$4.99/mo"},
+        {"name": "Canva AI",     "url": "https://canva.com/affiliates/YOUR_ID",        "commission": "30%",         "price": "$15/mo"},
     ],
     "coding": [
-        {"name": "GitHub Copilot", "url": "https://github.com/features/copilot", "commission": "N/A", "price": "$10/mo"},
-        {"name": "Cursor", "url": "https://cursor.sh", "commission": "N/A", "price": "$20/mo"},
-        {"name": "Tabnine", "url": "https://www.tabnine.com?ref=YOUR_ID", "commission": "20%", "price": "$12/mo"},
+        {"name": "GitHub Copilot","url": "https://github.com/features/copilot",        "commission": "N/A",         "price": "$10/mo"},
+        {"name": "Cursor",       "url": "https://cursor.sh",                            "commission": "N/A",         "price": "$20/mo"},
+        {"name": "Tabnine",      "url": "https://www.tabnine.com?ref=YOUR_ID",         "commission": "20%",         "price": "$12/mo"},
     ],
-    "general": [
-        {"name": "Notion AI", "url": "https://notion.so?r=YOUR_ID", "commission": "20%", "price": "$10/mo"},
-        {"name": "Grammarly", "url": "https://grammarly.com?via=YOUR_ID", "commission": "$20 per sale", "price": "$12/mo"},
-        {"name": "Otter.ai", "url": "https://otter.ai?ref=YOUR_ID", "commission": "15%", "price": "$17/mo"},
+    "presentation": [
+        {"name": "Beautiful.ai", "url": "https://www.beautiful.ai?ref=YOUR_ID",        "commission": "20%",         "price": "$12/mo"},
+        {"name": "Gamma",        "url": "https://gamma.app?ref=YOUR_ID",               "commission": "25%",         "price": "$10/mo"},
+        {"name": "Tome",         "url": "https://tome.app?ref=YOUR_ID",                "commission": "20%",         "price": "$16/mo"},
+    ],
+    "video": [
+        {"name": "Runway",       "url": "https://runwayml.com?ref=YOUR_ID",            "commission": "20%",         "price": "$15/mo"},
+        {"name": "Synthesia",    "url": "https://www.synthesia.io?via=YOUR_ID",        "commission": "25%",         "price": "$29/mo"},
+        {"name": "Descript",     "url": "https://www.descript.com?lmref=YOUR_ID",      "commission": "15%",         "price": "$24/mo"},
+    ],
+    "seo": [
+        {"name": "Surfer SEO",   "url": "https://surferseo.com?fp_ref=YOUR_ID",        "commission": "25%",         "price": "$89/mo"},
+        {"name": "Frase",        "url": "https://www.frase.io?ref=YOUR_ID",            "commission": "30%",         "price": "$15/mo"},
+        {"name": "NeuronWriter", "url": "https://neuronwriter.com?ref=YOUR_ID",        "commission": "30%",         "price": "$23/mo"},
+    ],
+    "transcription": [
+        {"name": "Otter.ai",     "url": "https://otter.ai?ref=YOUR_ID",               "commission": "15%",         "price": "$17/mo"},
+        {"name": "Fireflies.ai", "url": "https://fireflies.ai?ref=YOUR_ID",           "commission": "20%",         "price": "$10/mo"},
+        {"name": "Descript",     "url": "https://www.descript.com?lmref=YOUR_ID",     "commission": "15%",         "price": "$24/mo"},
+    ],
+    "chatbot": [
+        {"name": "Claude Pro",   "url": "https://claude.ai",                           "commission": "N/A",         "price": "$20/mo"},
+        {"name": "ChatGPT Plus", "url": "https://chat.openai.com",                     "commission": "N/A",         "price": "$20/mo"},
+        {"name": "Perplexity AI","url": "https://perplexity.ai?ref=YOUR_ID",           "commission": "20%",         "price": "$20/mo"},
+    ],
+    "productivity": [
+        {"name": "Notion AI",    "url": "https://notion.so?r=YOUR_ID",                "commission": "20%",         "price": "$10/mo"},
+        {"name": "ClickUp AI",   "url": "https://clickup.com?ref=YOUR_ID",            "commission": "20%",         "price": "$7/mo"},
+        {"name": "Motion",       "url": "https://www.usemotion.com?ref=YOUR_ID",       "commission": "20%",         "price": "$34/mo"},
+    ],
+    "email": [
+        {"name": "Lavender",     "url": "https://www.lavender.ai?ref=YOUR_ID",        "commission": "20%",         "price": "$29/mo"},
+        {"name": "Smartwriter",  "url": "https://smartwriter.ai?ref=YOUR_ID",          "commission": "30%",         "price": "$49/mo"},
+        {"name": "Writesonic",   "url": "https://writesonic.com?via=YOUR_ID",          "commission": "30%",         "price": "$19/mo"},
+    ],
+    "grammar": [
+        {"name": "Grammarly",    "url": "https://grammarly.com?via=YOUR_ID",          "commission": "$20/sale",    "price": "$12/mo"},
+        {"name": "ProWritingAid","url": "https://prowritingaid.com?afid=YOUR_ID",      "commission": "25%",         "price": "$10/mo"},
+        {"name": "Wordtune",     "url": "https://www.wordtune.com?ref=YOUR_ID",        "commission": "20%",         "price": "$10/mo"},
+    ],
+    "research": [
+        {"name": "Perplexity AI","url": "https://perplexity.ai?ref=YOUR_ID",          "commission": "20%",         "price": "$20/mo"},
+        {"name": "Elicit",       "url": "https://elicit.com",                          "commission": "N/A",         "price": "$10/mo"},
+        {"name": "Consensus",    "url": "https://consensus.app?ref=YOUR_ID",           "commission": "N/A",         "price": "$9/mo"},
     ],
 }
 
+# Ordered most-specific → least-specific so the first match wins
+_CATEGORY_RULES: list[tuple[str, list[str]]] = [
+    ("presentation", ["presentation", "slide", "pitch deck", "powerpoint", "keynote", "deck maker"]),
+    ("video",        ["video", "reel", "clip", "film", "animation", "avatar"]),
+    ("seo",          ["seo", "rank", "search optimiz", "keyword research", "backlink"]),
+    ("transcription",["transcri", "caption", "subtitle", "meeting note", "voice-to-text", "speech-to-text"]),
+    ("chatbot",      ["chatbot", "chat assistant", "llm", "chatgpt alternative", "conversational ai"]),
+    ("email",        ["email", "cold outreach", "newsletter", "inbox"]),
+    ("grammar",      ["grammar", "spell", "proofreading", "editing tool"]),
+    ("research",     ["research", "literature review", "academic", "citation", "fact-check"]),
+    ("coding",       ["cod", "developer", "programming", "github", "debug"]),
+    ("image",        ["image", "art", "photo", "visual", "illustration", "design"]),
+    ("writing",      ["writ", "copy", "content", "blog", "essay", "article"]),
+    ("productivity", []),  # catch-all — always matches
+]
+
 
 def _pick_products(keyword: str) -> list[dict]:
+    """Return the most relevant affiliate product list for the given keyword."""
     kw = keyword.lower()
-    if any(w in kw for w in ["writ", "copy", "content", "blog", "essay"]):
-        return AFFILIATE_PRODUCTS["writing"]
-    elif any(w in kw for w in ["image", "art", "design", "photo", "visual"]):
-        return AFFILIATE_PRODUCTS["image"]
-    elif any(w in kw for w in ["cod", "developer", "programming", "github"]):
-        return AFFILIATE_PRODUCTS["coding"]
-    else:
-        return AFFILIATE_PRODUCTS["general"]
+    for category, signals in _CATEGORY_RULES:
+        if not signals or any(s in kw for s in signals):
+            return AFFILIATE_PRODUCTS[category]
+    return AFFILIATE_PRODUCTS["productivity"]
 
 
 def _slug(text: str) -> str:
@@ -204,17 +257,42 @@ Return ONLY the title, nothing else."""
             "category": _categorize(keyword),
         }
 
+    def generate_title(self, keyword_data: dict) -> str:
+        """
+        Cheap pre-flight call: generate only the article title for a keyword.
+        Used by the orchestrator to run a duplicate check BEFORE spending tokens
+        on a full article. Returns an empty string on failure (caller should
+        treat that as a non-blocking warning, not a hard skip).
+        """
+        keyword = keyword_data.get("keyword", "")
+        prompt = (
+            f'Write an SEO-optimised H1 title for an article about "{keyword}".\n'
+            f"Rules:\n"
+            f"- 50-60 characters\n"
+            f"- Include the main keyword\n"
+            f"- Use a power word (Best, Ultimate, Complete, Top)\n"
+            f"- Use current year ({datetime.utcnow().year})\n"
+            f"Return ONLY the title, nothing else."
+        )
+        try:
+            resp = self.client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[{"role": "user", "content": prompt}],
+                max_tokens=50,
+                temperature=0.4,
+            )
+            title = resp.choices[0].message.content.strip().strip('"')
+            time.sleep(1)
+            return title
+        except Exception as e:
+            log.warning(f"[ContentAgent] generate_title failed for '{keyword}': {e}")
+            return ""
+
 
 def _categorize(keyword: str) -> str:
+    """Mirror the category logic from _CATEGORY_RULES for frontmatter tagging."""
     kw = keyword.lower()
-    if any(w in kw for w in ["writ", "copy", "content", "blog"]):
-        return "writing"
-    elif any(w in kw for w in ["image", "art", "design"]):
-        return "design"
-    elif any(w in kw for w in ["cod", "developer", "programming"]):
-        return "coding"
-    elif any(w in kw for w in ["video", "edit"]):
-        return "video"
-    elif any(w in kw for w in ["chat", "assistant", "llm"]):
-        return "chatbots"
+    for category, signals in _CATEGORY_RULES:
+        if not signals or any(s in kw for s in signals):
+            return category
     return "productivity"
