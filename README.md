@@ -62,6 +62,96 @@ Sign up for these programs, get your affiliate IDs, then update `agents/content_
 | [Impact.com](https://impact.com) | Enterprise software | 20-35% |
 | [Amazon Associates](https://affiliate-program.amazon.com) | Books/hardware | 3-10% | aitoolshub03f-20
 
+This is straightforward but takes a few days of approvals. Here's the practical path:
+Before you apply to anything
+Affiliate programs check your site before approving you. Make sure yours looks legit first:
+
+Real domain — not vercel.app. Buy something like aitoolshub.com on Namecheap (~$10/yr) and point it to Vercel
+Affiliate disclosure page — you already have one at /affiliate-disclosure, good
+A few published reviews — you have 14, that's plenty
+Contact page — you have it
+
+Once your domain is set, you're ready.
+
+The tools on your site and exactly where to apply
+Tier 1 — Apply first, highest commissions
+Jasper AI — 30% recurring
+
+Go to jasper.ai/affiliate-program
+Click "Apply now" — it uses PartnerStack
+Create a PartnerStack account, fill in your site URL and traffic estimate (be honest, even low traffic gets approved)
+Approval: 1–3 business days
+Once approved, go to PartnerStack dashboard → get your unique link → replace YOUR_ID in content_agent.py with your PartnerStack ref code
+
+Writesonic — 30% recurring
+
+Go to writesonic.com/affiliates
+Joins through their own dashboard
+Fast approval, often same day
+
+Grammarly — $20 flat per sale
+
+Go to grammarly.com/affiliates — runs through Impact
+Create an Impact account at impact.com/affiliates
+Search "Grammarly" in the marketplace and apply
+They review your site manually — takes 3–5 days
+Your link format will look like grammarly.com?utm_source=... with your Impact ID
+
+Surfer SEO — 25% recurring
+
+Go to surferseo.com/affiliate-program
+Runs on PartnerStack (same account as Jasper if you already made one)
+Search "Surfer SEO" in PartnerStack marketplace
+
+
+Tier 2 — Apply next
+Copy.ai — 45% recurring (highest on your list)
+
+Go to copy.ai/affiliates
+Also on PartnerStack
+
+Synthesia — 25% recurring
+
+Go to synthesia.io/affiliates
+Email affiliates@synthesia.io — they do manual review, not a self-serve portal
+Mention your review URL directly in the email
+
+Notion — 20%
+
+Go to notion.so/affiliates
+Runs through a direct portal — approval is selective, they prefer sites with real audience
+
+Frase — 30%
+
+frase.io/affiliates → runs on FirstPromoter
+
+
+Tier 3 — Low-effort cleanups (no affiliate program exists)
+These tools on your site have N/A commission and no public affiliate program:
+
+Midjourney — no program, remove or replace with Canva AI or Adobe Firefly
+GitHub Copilot / Cursor — no program
+ChatGPT Plus / Claude Pro — no program
+
+For those slots, swap in alternatives that do pay: Tabnine (for coding), Perplexity (for research/chatbot), Adobe Firefly (for image).
+
+After you get approved
+For each program you join, you get a unique tracking link or ID. Then in your repo:
+
+Open agents/content_agent.py
+Find AFFILIATE_PRODUCTS at the top
+Replace YOUR_ID in each URL with your actual ID:
+
+python{"name": "Jasper AI", "url": "https://www.jasper.ai?fpr=abc123", ...},
+#                                                         ^^^^^^
+#                                                         your PartnerStack ref
+That's it — all new articles generated after that will automatically use your real links.
+
+Tracking payments
+Each network pays differently:
+NetworkPayment thresholdSchedulePartnerStack$25Monthly (net-60)Impact$10MonthlyFirstPromoter$100MonthlyDirect (Synthesia etc.)variesMonthly
+Start with PartnerStack — one account covers Jasper, Surfer, Copy.ai, and many others. That's the highest ROI signup for the time spent.
+
 ### 6. Add Google AdSense
 1. Apply at [adsense.google.com](https://adsense.google.com)
 2. Replace `ca-pub-YOUR_PUBLISHER_ID` in `website/app/layout.tsx`
