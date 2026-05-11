@@ -12,6 +12,7 @@ from pathlib import Path
 from datetime import datetime
 
 from groq import Groq
+from site_config import SITE_NAME, SITE_URL, LOGO_URL, post_url
 
 log = logging.getLogger(__name__)
 
@@ -42,20 +43,20 @@ class SEOAgent:
             "dateModified": article["created_at"],
             "author": {
                 "@type": "Organization",
-                "name": "AI Tools Hub",
-                "url": "https://affiliate-silk-six.vercel.app"
+                "name": SITE_NAME,
+                "url": SITE_URL
             },
             "publisher": {
                 "@type": "Organization",
-                "name": "AI Tools Hub",
+                "name": SITE_NAME,
                 "logo": {
                     "@type": "ImageObject",
-                    "url": "https://affiliate-silk-six.vercel.app/logo.png"
+                    "url": LOGO_URL
                 }
             },
             "mainEntityOfPage": {
                 "@type": "WebPage",
-                "@id": f"https://affiliate-silk-six.vercel.app/blog/{article['slug']}"
+                "@id": post_url(article['slug'])
             }
         }
 
@@ -178,7 +179,7 @@ Return ONLY the JSON array."""
 
         today = datetime.utcnow().strftime("%Y-%m-%d")
         new_url = f"""  <url>
-    <loc>https://affiliate-silk-six.vercel.app/blog/{article["slug"]}</loc>
+    <loc>{post_url(article['slug'])}</loc>
     <lastmod>{today}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

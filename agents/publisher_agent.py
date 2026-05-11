@@ -9,6 +9,7 @@ import os
 import subprocess
 from datetime import datetime
 from pathlib import Path
+from site_config import BOT_GIT_EMAIL, BOT_GIT_NAME
 
 log = logging.getLogger(__name__)
 
@@ -59,8 +60,8 @@ export const schema = {schema_json}
     def _git_commit(self, file_path: Path, title: str):
         """Commit and push the new article."""
         try:
-            subprocess.run(["git", "config", "user.email", "chaaya.visa@gmail.com"], check=True)
-            subprocess.run(["git", "config", "user.name", "AI Content Bot"], check=True)
+            subprocess.run(["git", "config", "user.email", BOT_GIT_EMAIL], check=True)
+            subprocess.run(["git", "config", "user.name", BOT_GIT_NAME], check=True)
             subprocess.run(["git", "add", str(file_path)], check=True)
 
             # Also add updated sitemap

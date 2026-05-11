@@ -1,15 +1,22 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import MobileMenu from '@/components/MobileMenu';
+import {
+  SITE_URL,
+  SITE_NAME,
+  SITE_TAGLINE,
+  SITE_DESC,
+  TWITTER_HANDLE,
+  TWITTER_URL,
+} from '@/lib/site';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.SITE_URL || 'https://affiliate-silk-six.vercel.app'),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: 'AI Tools Hub — Expert Reviews & Comparisons',
-    template: '%s | AI Tools Hub',
+    default: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    template: `%s | ${SITE_NAME}`,
   },
-  description:
-    'Unbiased AI tool reviews, comparisons, and guides. Find the best AI software for writing, coding, design, and productivity.',
+  description: SITE_DESC,
   icons: {
     icon: '/favicon.svg',
     shortcut: '/favicon.svg',
@@ -17,11 +24,11 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    siteName: 'AI Tools Hub',
+    siteName: SITE_NAME,
   },
   twitter: {
     card: 'summary_large_image',
-    site: '@AIToolsHub',
+    site: TWITTER_HANDLE,
   },
   robots: {
     index: true,
@@ -61,7 +68,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {/* Logo */}
             <a href="/" className="flex items-center gap-2 font-bold text-xl text-blue-600 shrink-0" style={{fontFamily:'Sora,sans-serif'}}>
               <span className="text-2xl">🤖</span>
-              <span className="hidden sm:inline">AI Tools Hub</span>
+              <span className="hidden sm:inline">{SITE_NAME}</span>
               <span className="sm:hidden">AIHub</span>
             </a>
 
@@ -117,10 +124,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="max-w-6xl mx-auto px-4">
             <div className="grid md:grid-cols-4 gap-8 mb-10">
               <div>
-                <p className="text-white font-bold text-lg mb-2" style={{fontFamily:'Sora,sans-serif'}}>🤖 AI Tools Hub</p>
-                <p className="text-sm leading-relaxed">Independent, hands-on reviews of AI tools. We test so you don't waste money.</p>
+                <p className="text-white font-bold text-lg mb-2" style={{fontFamily:'Sora,sans-serif'}}>🤖 {SITE_NAME}</p>
+                <p className="text-sm leading-relaxed">Independent, hands-on reviews of AI tools. We test so you don&apos;t waste money.</p>
                 <div className="flex gap-3 mt-4">
-                  <a href="https://twitter.com/AIToolsHub" className="text-slate-500 hover:text-white transition-colors text-lg" aria-label="Twitter">𝕏</a>
+                  <a href={TWITTER_URL} className="text-slate-500 hover:text-white transition-colors text-lg" aria-label="Twitter">𝕏</a>
                 </div>
               </div>
               <div>
@@ -156,7 +163,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </div>
             </div>
             <div className="border-t border-slate-800 pt-6 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs">
-              <p>© {new Date().getFullYear()} AI Tools Hub. All rights reserved.</p>
+              <p>© {new Date().getFullYear()} {SITE_NAME}. All rights reserved.</p>
               <p>Reviews written and edited by our team.</p>
             </div>
           </div>

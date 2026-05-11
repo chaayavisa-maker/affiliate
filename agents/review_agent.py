@@ -32,6 +32,7 @@ from pathlib import Path
 from typing import Optional
 
 from groq import Groq
+from site_config import BOT_GIT_EMAIL, BOT_GIT_NAME
 
 log = logging.getLogger(__name__)
 
@@ -436,8 +437,8 @@ Example row format:
 def git_commit_updates(updated_paths: list[Path], change_summary: str):
     """Stage and commit updated MDX files."""
     try:
-        subprocess.run(["git", "config", "user.email", "bot@aitoolshub.ai"], check=True)
-        subprocess.run(["git", "config", "user.name", "Review Bot"], check=True)
+        subprocess.run(["git", "config", "user.email", BOT_GIT_EMAIL], check=True)
+        subprocess.run(["git", "config", "user.name", BOT_GIT_NAME], check=True)
         for p in updated_paths:
             subprocess.run(["git", "add", str(p)], check=True)
         msg = f"[review-bot] Update reviews: {change_summary[:80]}"

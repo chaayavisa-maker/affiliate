@@ -7,6 +7,7 @@ import type { Metadata } from 'next';
 import ReadingProgress from '@/components/ReadingProgress';
 import TableOfContents from '@/components/TableOfContents';
 import NewsletterForm from '@/components/NewsletterForm';
+import { SITE_URL, AUTHOR_NAME, postUrl as sitePostUrl } from '@/lib/site';
 
 interface Props { params: { slug: string } }
 
@@ -60,7 +61,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-const SITE_URL = process.env.SITE_URL || 'https://affiliate-silk-six.vercel.app';
 
 export default function PostPage({ params }: Props) {
   const post = getPostBySlug(params.slug);
@@ -77,7 +77,7 @@ export default function PostPage({ params }: Props) {
   const updatedFmt = format(new Date(post.updatedDate), 'MMMM d, yyyy');
   const showUpdated = post.updatedDate !== post.date;
 
-  const postUrl = `${SITE_URL}/blog/${post.slug}`;
+  const postUrl = sitePostUrl(post.slug);
 
   return (
     <>
@@ -147,7 +147,7 @@ export default function PostPage({ params }: Props) {
                   AI
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-slate-800">AI Tools Hub Editorial Team</p>
+                  <p className="text-sm font-semibold text-slate-800">{AUTHOR_NAME}</p>
                   <p className="text-xs text-slate-400">Hands-on testing · Updated when tools change</p>
                 </div>
                 <a href="/about" className="ml-auto text-xs text-blue-600 hover:underline shrink-0">Our process →</a>
