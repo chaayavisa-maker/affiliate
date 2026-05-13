@@ -1,5 +1,10 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import './globals.css';
+
+// Set NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX in Vercel → Settings → Environment Variables.
+// Prefix must be NEXT_PUBLIC_ so Next.js inlines it at build time.
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? '';
 import MobileMenu from '@/components/MobileMenu';
 import {
   SITE_URL,
@@ -49,13 +54,30 @@ const CATEGORIES = [
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <head>
-        {/* Google AdSense — uncomment and replace YOUR_PUBLISHER_ID when approved */}
-        {/* <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID" crossOrigin="anonymous" /> */}
-        {/* Google Analytics — uncomment and replace G-YOUR_GA_ID */}
-        {/* <script async src="https://www.googletagmanager.com/gtag/js?id=G-YOUR_GA_ID" /> */}
-      </head>
+      <head />
       <body className="bg-slate-50 text-slate-900 antialiased">
+
+        {/* ── Google Analytics 4 ─────────────────────────────────────────────
+            Loads only when NEXT_PUBLIC_GA_ID is set. Uses next/script with
+            strategy="afterInteractive" so it never blocks page rendering.
+            To activate: add NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX in Vercel
+            Project → Settings → Environment Variables, then redeploy.        */}
+        {GA_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga4-init" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_ID}', { page_path: window.location.pathname });
+              `}
+            </Script>
+          </>
+        )}
 
         {/* Top bar */}
         <div className="bg-blue-600 text-white text-xs text-center py-2 px-4 font-medium">
@@ -172,3 +194,4 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   );
 }
+

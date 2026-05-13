@@ -77,6 +77,7 @@ export default function PostPage({ params }: Props) {
   const updatedFmt = format(new Date(post.updatedDate), 'MMMM d, yyyy');
   const showUpdated = post.updatedDate !== post.date;
 
+  // postUrl is built from SITE_URL in lib/site.ts (set SITE_URL env var in Vercel)
   const postUrl = sitePostUrl(post.slug);
 
   return (
@@ -181,24 +182,27 @@ export default function PostPage({ params }: Props) {
               </div>
             </div>
 
-            {/* Share */}
+            {/* Share — postUrl comes from SITE_URL in lib/site.ts */}
             <div className="mt-6 pt-6 border-t border-slate-200">
               <p className="text-sm font-semibold text-slate-600 mb-3">Share this review:</p>
               <div className="flex gap-2 flex-wrap">
-                <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(postUrl)}`}
-                  target="_blank" rel="noopener"
-                  className="flex items-center gap-2 bg-slate-900 text-white text-sm px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors font-medium">
+                {/* X / Twitter — shares SITE_URL/blog/[slug] */}
+                <a
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(postUrl)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 bg-slate-900 text-white text-sm px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors font-medium"
+                >
                   𝕏 Share on X
                 </a>
-                <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`}
-                  target="_blank" rel="noopener"
-                  className="flex items-center gap-2 bg-blue-700 text-white text-sm px-4 py-2 rounded-lg hover:bg-blue-800 transition-colors font-medium">
-                  in LinkedIn
-                </a>
-                <a href={`https://news.ycombinator.com/submitlink?u=${encodeURIComponent(postUrl)}&t=${encodeURIComponent(post.title)}`}
-                  target="_blank" rel="noopener"
-                  className="flex items-center gap-2 bg-orange-500 text-white text-sm px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium">
-                  HN
+                {/* LinkedIn — shares SITE_URL/blog/[slug] */}
+                <a
+                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 bg-blue-700 text-white text-sm px-4 py-2 rounded-lg hover:bg-blue-800 transition-colors font-medium"
+                >
+                  in Share on LinkedIn
                 </a>
               </div>
             </div>
@@ -258,3 +262,4 @@ export default function PostPage({ params }: Props) {
     </>
   );
 }
+
