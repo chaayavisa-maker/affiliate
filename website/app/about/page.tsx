@@ -134,25 +134,6 @@ export default function AboutPage() {
             <p className="text-gray-600 leading-relaxed text-sm whitespace-pre-line mb-4">
               {FOUNDER.bio}
             </p>
-            {/* Social links */}
-            <div className="flex gap-3">
-              <a
-                href={FOUNDER.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold bg-blue-700 text-white px-3 py-1.5 rounded-lg hover:bg-blue-800 transition-colors"
-              >
-                in LinkedIn
-              </a>
-              <a
-                href={FOUNDER.twitter}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold bg-slate-900 text-white px-3 py-1.5 rounded-lg hover:bg-slate-700 transition-colors"
-              >
-                𝕏 Follow on X
-              </a>
-            </div>
           </div>
         </div>
       </section>

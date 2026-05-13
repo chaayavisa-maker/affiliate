@@ -102,8 +102,6 @@ export default function ToolsPage() {
     );
     return list;
   }, [cat, sort, freeOnly]);
-
-  const affiliateCount = TOOLS.filter((t) => t.affiliate).length;
   const totalCount     = TOOLS.length;
 
   return (
@@ -117,24 +115,15 @@ export default function ToolsPage() {
           AI Tools Directory
         </h1>
         <p className="text-slate-500">
-          Browse and compare {totalCount} AI tools across{' '}
-          {CATEGORIES.length - 1} categories. Tools with an{' '}
-          <span className="inline-flex items-center gap-1 bg-violet-100 text-violet-700 text-xs font-semibold px-2 py-0.5 rounded-full">
-            Affiliate
-          </span>{' '}
-          badge support this site when you sign up.
+          Browse and compare {totalCount} AI tools across {CATEGORIES.length - 1} categories.
         </p>
       </div>
 
       {/* Stats strip */}
-      <div className="grid grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-2 gap-4 mb-8">
         <div className="bg-blue-50 border border-blue-100 rounded-2xl px-5 py-4 text-center">
           <p className="text-2xl font-bold text-blue-700" style={{ fontFamily: 'Sora,sans-serif' }}>{totalCount}</p>
           <p className="text-xs text-slate-500 mt-0.5">Tools reviewed</p>
-        </div>
-        <div className="bg-violet-50 border border-violet-100 rounded-2xl px-5 py-4 text-center">
-          <p className="text-2xl font-bold text-violet-700" style={{ fontFamily: 'Sora,sans-serif' }}>{affiliateCount}</p>
-          <p className="text-xs text-slate-500 mt-0.5">With affiliate programs</p>
         </div>
         <div className="bg-emerald-50 border border-emerald-100 rounded-2xl px-5 py-4 text-center">
           <p className="text-2xl font-bold text-emerald-700" style={{ fontFamily: 'Sora,sans-serif' }}>{CATEGORIES.length - 1}</p>
@@ -223,24 +212,12 @@ export default function ToolsPage() {
                       {tool.badge}
                     </span>
                   )}
-                  {tool.affiliate && (
-                    <span className="text-xs font-semibold bg-violet-100 text-violet-700 border border-violet-200 px-2 py-0.5 rounded-full whitespace-nowrap">
-                      Affiliate
-                    </span>
-                  )}
                 </div>
               </div>
 
               <p className="text-slate-500 text-sm mb-3 flex-1">{tool.desc}</p>
 
-              {/* Commission info */}
-              {tool.affiliate && tool.commission && (
-                <div className="flex items-center gap-1.5 mb-3 text-xs text-violet-700 bg-violet-50 rounded-lg px-2.5 py-1.5">
-                  <span>💰</span>
-                  <span className="font-medium">{tool.commission}</span>
-                </div>
-              )}
-
+             
               {/* Pros */}
               <ul className="flex flex-wrap gap-1.5 mb-4">
                 {tool.pros.map((p) => (

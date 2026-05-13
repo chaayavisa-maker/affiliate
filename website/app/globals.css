@@ -1,40 +1,67 @@
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --navy: #0f172a;
-  --blue: #2563eb;
-  --amber: #f59e0b;
-  --green: #10b981;
+  --navy:   #0f172a;
+  --blue:   #2563eb;
+  --amber:  #f59e0b;
+  --green:  #10b981;
 }
 
+/* ── Base ──────────────────────────────────────────────────────────────────── */
 @layer base {
   html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
-  body { font-family: 'Inter', sans-serif; }
+  body { font-family: 'DM Sans', sans-serif; }
   h1,h2,h3,h4,h5,h6 { font-family: 'Sora', sans-serif; }
 
-  .prose h2 { @apply text-2xl font-bold mt-12 mb-4 text-slate-900 pb-2 border-b border-slate-100; font-family: 'Sora', sans-serif; }
-  .prose h3 { @apply text-xl font-semibold mt-8 mb-3 text-slate-800; font-family: 'Sora', sans-serif; }
-  .prose p  { @apply mb-5 leading-relaxed text-slate-600; }
-  .prose ul { @apply list-disc pl-6 mb-5 text-slate-600 space-y-2; }
-  .prose ol { @apply list-decimal pl-6 mb-5 text-slate-600 space-y-2; }
-  .prose li { @apply leading-relaxed; }
-  .prose a  { @apply text-blue-600 no-underline hover:underline font-medium; }
+  /* ── Prose ── */
+  .prose h2 {
+    @apply text-2xl font-bold mt-14 mb-4 text-slate-900 pb-3;
+    font-family: 'Sora', sans-serif;
+    border-bottom: 2px solid transparent;
+    background: linear-gradient(90deg, #e2e8f0 0%, transparent 100%) border-box;
+    border-image: linear-gradient(90deg, #cbd5e1, transparent) 1;
+  }
+  .prose h3 {
+    @apply text-xl font-semibold mt-10 mb-3 text-slate-800;
+    font-family: 'Sora', sans-serif;
+  }
+  .prose p   { @apply mb-5 leading-[1.8] text-slate-600 text-[15.5px]; }
+  .prose ul  { @apply list-none pl-0 mb-5 text-slate-600 space-y-2; }
+  .prose ul li {
+    @apply pl-5 relative leading-relaxed text-[15px];
+  }
+  .prose ul li::before {
+    content: '→';
+    @apply absolute left-0 text-blue-500 font-bold;
+  }
+  .prose ol  { @apply list-decimal pl-6 mb-5 text-slate-600 space-y-2; }
+  .prose li  { @apply leading-relaxed; }
+  .prose a   { @apply text-blue-600 no-underline hover:underline font-medium; }
   .prose strong { @apply font-semibold text-slate-900; }
-  .prose blockquote { @apply border-l-4 border-blue-400 pl-5 italic text-slate-600 my-8 bg-blue-50 py-3 pr-4 rounded-r-xl; }
+  .prose blockquote {
+    @apply border-l-4 border-blue-500 pl-5 italic text-slate-600 my-8 py-4 pr-4 rounded-r-2xl;
+    background: linear-gradient(to right, #eff6ff, #f8fafc);
+  }
   .prose table { @apply w-full; }
-  .prose code { @apply bg-slate-100 px-1.5 py-0.5 rounded text-sm font-mono text-pink-600 border border-slate-200; }
-  .prose pre  { @apply bg-slate-900 text-slate-100 p-5 rounded-2xl overflow-x-auto my-8; }
+  .prose code {
+    @apply bg-slate-100 px-1.5 py-0.5 rounded-md text-sm font-mono text-pink-600 border border-slate-200;
+    font-size: 0.82em;
+  }
+  .prose pre  { @apply bg-slate-900 text-slate-100 p-5 rounded-2xl overflow-x-auto my-8 shadow-xl; }
   .prose pre code { @apply bg-transparent text-slate-100 p-0 border-none; }
-  .prose hr  { @apply my-10 border-slate-200; }
+  .prose hr  { @apply my-12 border-slate-200; }
 }
 
+/* ── Utilities ─────────────────────────────────────────────────────────────── */
 @layer utilities {
+
+  /* Animations */
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(14px); }
+    from { opacity: 0; transform: translateY(16px); }
     to   { opacity: 1; transform: translateY(0); }
   }
   @keyframes fadeIn {
@@ -45,10 +72,20 @@
     from { opacity: 0; transform: translateX(-100%); }
     to   { opacity: 1; transform: translateX(0); }
   }
+  @keyframes shimmer {
+    0%   { background-position: -200% center; }
+    100% { background-position:  200% center; }
+  }
+  @keyframes pulse-ring {
+    0%   { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.25); }
+    70%  { box-shadow: 0 0 0 8px rgba(37, 99, 235, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+  }
 
-  .animate-fadeUp  { animation: fadeUp 0.5s ease both; }
-  .animate-fadeIn  { animation: fadeIn 0.35s ease both; }
-  .animate-slideIn { animation: slideIn 0.3s ease both; }
+  .animate-fadeUp   { animation: fadeUp  0.5s ease both; }
+  .animate-fadeIn   { animation: fadeIn  0.35s ease both; }
+  .animate-slideIn  { animation: slideIn 0.3s ease both; }
+  .animate-shimmer  { animation: shimmer 2.5s linear infinite; }
 
   .delay-100 { animation-delay: 0.1s; }
   .delay-200 { animation-delay: 0.2s; }
@@ -56,6 +93,7 @@
   .delay-400 { animation-delay: 0.4s; }
   .delay-500 { animation-delay: 0.5s; }
 
+  /* Text gradient */
   .gradient-text {
     background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
     -webkit-background-clip: text;
@@ -63,11 +101,52 @@
     background-clip: text;
   }
 
+  /* Card hover lift */
   .card-hover { @apply transition-all duration-200; }
-  .card-hover:hover { transform: translateY(-3px); @apply shadow-lg; }
+  .card-hover:hover { transform: translateY(-4px); @apply shadow-lg; }
 
+  /* Badges */
   .badge-top    { @apply bg-amber-100 text-amber-700 border border-amber-200; }
   .badge-free   { @apply bg-emerald-100 text-emerald-700 border border-emerald-200; }
   .badge-editor { @apply bg-blue-100 text-blue-700 border border-blue-200; }
   .badge-new    { @apply bg-violet-100 text-violet-700 border border-violet-200; }
+
+  /* ── Blog post page hero banner (category image) ── */
+  /* Replaces the plain emoji gradient block with a textured gradient */
+  .post-hero-banner {
+    @apply relative rounded-2xl h-52 flex items-center justify-center overflow-hidden mb-8;
+    background: linear-gradient(135deg, var(--tw-gradient-from), var(--tw-gradient-to));
+  }
+  .post-hero-banner::before {
+    content: '';
+    @apply absolute inset-0 opacity-30;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .post-hero-banner .hero-emoji {
+    @apply relative text-8xl drop-shadow-lg;
+  }
+
+  /* ── Blog card ── */
+  .blog-card {
+    @apply bg-white rounded-2xl border border-slate-200 overflow-hidden transition-all duration-200 flex flex-col;
+  }
+  .blog-card:hover {
+    @apply shadow-xl border-blue-200;
+    transform: translateY(-4px);
+  }
+  .blog-card-accent {
+    @apply h-1.5 w-full;
+  }
+
+  /* ── Shimmer loading bar (used on ReadingProgress if needed) ── */
+  .shimmer-bar {
+    background: linear-gradient(90deg, var(--blue) 0%, #7c3aed 50%, var(--blue) 100%);
+    background-size: 200% auto;
+    animation: shimmer 2s linear infinite;
+  }
+
+  /* ── Comparison table winner row pulse-ring on hover ── */
+  .comparison-winner-cta {
+    animation: pulse-ring 2s ease-in-out infinite;
+  }
 }
