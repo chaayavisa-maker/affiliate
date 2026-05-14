@@ -40,6 +40,7 @@ const TOP_TOOLS = [
 export default function HomePage() {
   const posts = getAllPosts();
   const featured = posts.slice(0, 3);
+  const recent = posts.slice(3, 7);
   const categories = Object.entries(CATEGORY_META);
 
   // Honest stats derived from real data
