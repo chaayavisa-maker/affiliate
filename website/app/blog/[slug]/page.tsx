@@ -1,12 +1,12 @@
 import { getAllPosts, getPostBySlug, extractToc } from '@/lib/posts';
 import { MDXRemote } from 'next-mdx-remote/rsc';
+import remarkGfm from 'remark-gfm';
 import { Table, Thead, Tbody, Th, Td, Tr } from '@/components/mdx/Table';
 import { notFound } from 'next/navigation';
 import { format } from 'date-fns';
 import type { Metadata } from 'next';
 import ReadingProgress from '@/components/ReadingProgress';
 import TableOfContents from '@/components/TableOfContents';
-import NewsletterForm from '@/components/NewsletterForm';
 import { SITE_URL, AUTHOR_NAME, postUrl as sitePostUrl } from '@/lib/site';
 
 interface Props { params: { slug: string } }
@@ -217,6 +217,7 @@ export default function PostPage({ params }: Props) {
             <div className="prose max-w-none">
               <MDXRemote
                 source={post.content}
+                options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
                 components={{ table: Table, thead: Thead, tbody: Tbody, th: Th, td: Td, tr: Tr }}
               />
             </div>
@@ -313,13 +314,6 @@ export default function PostPage({ params }: Props) {
                   </div>
                 </div>
               )}
-
-              {/* Newsletter */}
-              <div className="bg-slate-900 text-white rounded-2xl p-5 shadow-sm">
-                <p className="font-bold text-lg mb-1" style={{ fontFamily: 'Sora, sans-serif' }}>📧 Weekly AI Picks</p>
-                <p className="text-slate-400 text-sm mb-4">New reviews and deals every Thursday.</p>
-                <NewsletterForm />
-              </div>
 
               {/* Tools directory */}
               <a

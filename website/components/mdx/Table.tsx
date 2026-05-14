@@ -79,8 +79,6 @@ export function Tr(props: HTMLAttributes<HTMLTableRowElement>) {
         border-b border-slate-100 last:border-0
         even:bg-slate-50/70
         hover:bg-blue-50/50
-        first:bg-gradient-to-r first:from-amber-50 first:to-yellow-50/60
-        first:shadow-[inset_4px_0_0_#f59e0b]
       "
       {...props}
     />

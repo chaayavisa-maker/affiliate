@@ -99,6 +99,52 @@ _CATEGORY_RULES: list[tuple[str, list[str]]] = [
 ]
 
 
+def _sanitise_tables(content: str) -> str:
+    """
+    Ensure every GFM markdown table is an unbroken block (no blank lines between rows).
+    LLMs sometimes insert blank lines inside tables which breaks the GFM parser.
+    """
+    import re
+    lines = content.splitlines()
+    result = []
+    in_table = False
+
+    for line in lines:
+        is_table_row = bool(re.match(r'^\s*\|', line))
+        if is_table_row:
+            in_table = True
+            result.append(line)
+        elif in_table and line.strip() == '':
+            result.append('\x00BLANK\x00')
+        else:
+            if in_table:
+                flushed = []
+                while result and result[-1] == '\x00BLANK\x00':
+                    flushed.append('')
+                    result.pop()
+                result.extend(flushed)
+                in_table = False
+            result.append(line)
+
+    final = []
+    i = 0
+    while i < len(result):
+        if result[i] == '\x00BLANK\x00':
+            j = i + 1
+            while j < len(result) and result[j] == '\x00BLANK\x00':
+                j += 1
+            if j < len(result) and re.match(r'^\s*\|', result[j]):
+                i = j
+                continue
+            else:
+                final.append('')
+        else:
+            final.append(result[i])
+        i += 1
+
+    return '\n'.join(final)
+
+
 def _pick_products(keyword: str) -> list[dict]:
     """Return the most relevant affiliate product list for the given keyword."""
     kw = keyword.lower()
@@ -209,6 +255,8 @@ Example format (3 tools):
 | Copy.ai | Budget Writers | $49/mo | ✓ Free tier | Affordable Plans | ★★★★☆ | ★★★★☆ |
 | Writesonic | Solopreneurs | $19/mo | ✓ Free tier | Low Price | ★★★★☆ | ★★★☆☆ |
 
+CRITICAL: Do NOT put blank lines between table rows — the table must be one unbroken block.
+
 ## Frequently Asked Questions  [MINIMUM 200 words]
 3 questions real buyers ask, with 2-3 sentence answers each. Use **bold** for the question.
 
@@ -235,6 +283,7 @@ Do NOT include YAML frontmatter."""
             temperature=0.6,
         )
         content = response.choices[0].message.content
+        content = _sanitise_tables(content)
         time.sleep(2)
 
         # Generate meta description
