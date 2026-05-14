@@ -69,15 +69,6 @@ export default function MobileMenu() {
                 </a>
               ))}
             </nav>
-            <div className="p-4 border-t border-slate-100">
-              <a
-                href="/newsletter"
-                onClick={() => setOpen(false)}
-                className="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl text-sm font-semibold transition-colors"
-              >
-                📧 Get Weekly AI Picks
-              </a>
-            </div>
           </div>
         </>
       )}

@@ -6,6 +6,7 @@ import './globals.css';
 // Prefix must be NEXT_PUBLIC_ so Next.js inlines it at build time.
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? '';
 import MobileMenu from '@/components/MobileMenu';
+import { getAllPosts } from '@/lib/posts';
 import {
   SITE_URL,
   SITE_NAME,
@@ -51,7 +52,8 @@ const CATEGORIES = [
   { href: '/blog?category=video',        label: '🎬 Video' },
 ];
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const latestPost = getAllPosts()[0] ?? null;
   return (
     <html lang="en">
       <head />
@@ -81,7 +83,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {/* Top bar */}
         <div className="bg-blue-600 text-white text-xs text-center py-2 px-4 font-medium">
-          🔥 Latest: <a href="/blog" className="underline hover:no-underline font-semibold">Best AI Voice Generators for Business 2026</a>
+          🔥 Latest:{' '}
+          {latestPost ? (
+            <a href={`/blog/${latestPost.slug}`} className="underline hover:no-underline font-semibold">
+              {latestPost.title}
+            </a>
+          ) : (
+            <a href="/blog" className="underline hover:no-underline font-semibold">Browse all reviews</a>
+          )}
         </div>
 
         <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
@@ -131,10 +140,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
             {/* Right CTA + mobile menu */}
             <div className="flex items-center gap-2">
-              <a href="/newsletter"
-                className="hidden md:inline-flex items-center gap-1.5 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">
-                📧 Weekly Picks
-              </a>
               <MobileMenu />
             </div>
           </nav>
@@ -168,7 +173,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   <li><a href="/tools" className="hover:text-white transition-colors">Tools Directory</a></li>
                   <li><a href="/blog" className="hover:text-white transition-colors">All Reviews</a></li>
                   <li><a href="/search" className="hover:text-white transition-colors">Search</a></li>
-                  <li><a href="/newsletter" className="hover:text-white transition-colors">Newsletter</a></li>
                   <li><a href="/about" className="hover:text-white transition-colors">About</a></li>
                   <li><a href="/contact" className="hover:text-white transition-colors">Contact</a></li>
                 </ul>

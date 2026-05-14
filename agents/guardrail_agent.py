@@ -21,7 +21,6 @@ from pathlib import Path
 from typing import Optional
 
 from groq import Groq
-from content_catalogue import ContentCatalogue
 
 log = logging.getLogger(__name__)
 
@@ -91,54 +90,60 @@ class GuardrailResult:
 
 # ── Main agent ─────────────────────────────────────────────────────────────────
 class GuardrailAgent:
-    def __init__(self, groq_api_key: str, catalogue: ContentCatalogue):
-        self.client    = Groq(api_key=groq_api_key)
-        self.catalogue = catalogue
+    def __init__(self, groq_api_key: str):
+        self.client = Groq(api_key=groq_api_key)
 
     # ── Public API ─────────────────────────────────────────────────────────────
 
     def is_duplicate_title(self, title: str) -> tuple[bool, str]:
         """
-        Pre-flight duplicate check: is this proposed title too close to any
-        existing article? Called BEFORE content generation so no tokens are
-        wasted writing an article that will be rejected for topic overlap.
-
-        Uses the shared ContentCatalogue (rich metadata: title + description +
-        slug + category) rather than re-scanning disk, so articles published
-        earlier in the same run are also checked.
-
-        Returns (is_duplicate: bool, reason: str).
+        Lightweight pre-flight check: is this title too close to any existing article?
+        Designed to be called BEFORE content generation so no tokens are wasted.
+        Returns (is_duplicate, reason).
         """
         if not title:
             return False, ""
 
-        # Fast path: slug collision check (no LLM call)
-        new_slug = re.sub(r"[^a-z0-9\s-]", "", title.lower())
-        new_slug = re.sub(r"\s+", "-", new_slug.strip())[:80]
-        if new_slug in self.catalogue.all_slugs():
-            return True, f"Exact slug collision with existing post: '{new_slug}'"
+        existing_titles: list[str] = []
+        if CONTENT_DIR.exists():
+            for mdx in CONTENT_DIR.glob("*.mdx"):
+                try:
+                    text = mdx.read_text(encoding="utf-8", errors="ignore")
+                    m = re.search(r'^title:\s*"(.+)"', text, re.MULTILINE)
+                    if m:
+                        existing_titles.append(m.group(1).strip())
+                except Exception:
+                    pass
 
-        entries = self.catalogue.all_entries()
-        if not entries:
+        if not existing_titles:
             return False, ""
 
-        # Semantic check via LLM, using rich catalogue context
-        prompt = (
-            "You are a content strategy editor. Decide whether a proposed new article\n"
-            "substantially duplicates any article already on the site.\n\n"
-            f'Proposed title: "{title}"\n\n'
-            "Existing articles (title | category | slug | description excerpt):\n"
-            f"{self.catalogue.summary_for_prompt()}\n\n"
-            "DUPLICATE if: the new article would review essentially the same tools\n"
-            "for the same audience intent, even with a differently worded title.\n"
-            "NOT a duplicate if: it targets a clearly different use-case, audience\n"
-            "segment, or a substantially different tool set.\n"
-            "A year change alone does NOT make it unique.\n\n"
-            "Reply with ONLY valid JSON (no markdown):\n"
-            '{"is_duplicate": true_or_false, '
-            '"similar_to": "closest existing slug or null", '
-            '"reason": "one sentence"}'
-        )
+        # Also check slug collision
+        new_slug = re.sub(r'[^a-z0-9\s-]', '', title.lower())
+        new_slug = re.sub(r'\s+', '-', new_slug.strip())[:80]
+        for mdx in CONTENT_DIR.glob("*.mdx"):
+            try:
+                text = mdx.read_text(encoding="utf-8", errors="ignore")
+                m = re.search(r'^slug:\s*(.+)', text, re.MULTILINE)
+                if m and m.group(1).strip() == new_slug:
+                    return True, f"Exact slug collision with existing post: '{new_slug}'"
+            except Exception:
+                pass
+
+        prompt = f"""You are a content strategy editor. Decide whether a proposed new article
+substantially duplicates any article already on the site.
+
+Proposed title: "{title}"
+
+Existing article titles:
+{json.dumps(existing_titles, indent=2)}
+
+DUPLICATE if: the new article would review essentially the same tools for the same audience.
+NOT a duplicate if: it targets a clearly different use-case, audience segment, or tool set.
+A year change alone does NOT make it unique.
+
+Reply with ONLY valid JSON (no markdown):
+{{"is_duplicate": true_or_false, "similar_to": "closest existing title or null", "reason": "one sentence"}}"""
 
         try:
             resp = self.client.chat.completions.create(
@@ -148,18 +153,16 @@ class GuardrailAgent:
                 temperature=0.1,
             )
             raw = resp.choices[0].message.content
-            m   = re.search(r"\{.*\}", raw, re.DOTALL)
+            m = re.search(r'\{.*\}', raw, re.DOTALL)
             if not m:
                 return False, "parse error"
             data = json.loads(m.group())
             time.sleep(1)
-            is_dup = bool(data.get("is_duplicate"))
-            return is_dup, (
+            return bool(data.get("is_duplicate")), (
                 f"Too similar to \"{data.get('similar_to')}\" — {data.get('reason')}"
-                if is_dup else data.get("reason", "")
             )
-        except Exception as exc:
-            log.warning(f"[Guardrail] is_duplicate_title failed: {exc}")
+        except Exception as e:
+            log.warning(f"[Guardrail] is_duplicate_title failed: {e}")
             return False, ""
 
     def validate(self, article: dict) -> GuardrailResult:

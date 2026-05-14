@@ -1,6 +1,5 @@
 import { getAllPosts } from '@/lib/posts';
 import { format } from 'date-fns';
-import NewsletterForm from '@/components/NewsletterForm';
 
 const CATEGORY_META: Record<string, { icon: string; label: string; desc: string; color: string }> = {
   writing:      { icon: '✍️', label: 'AI Writing',     desc: 'Copywriting, blogs, essays',    color: 'from-violet-100 to-purple-100' },
@@ -20,7 +19,7 @@ const TOP_TOOLS = [
 export default function HomePage() {
   const posts = getAllPosts();
   const featured = posts.slice(0, 3);
-  const recent = posts.slice(3, 9);
+  const recent = posts.slice(0, 6);
   const categories = Object.entries(CATEGORY_META);
 
   // Honest stats derived from real data
@@ -221,19 +220,6 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ── Newsletter ── */}
-      <section className="bg-gradient-to-br from-slate-900 to-blue-950 text-white py-20 px-4">
-        <div className="max-w-2xl mx-auto text-center">
-          <div className="text-4xl mb-4">📬</div>
-          <h2 className="text-3xl font-bold mb-3" style={{fontFamily:'Sora,sans-serif'}}>Get the Best AI Tools Every Week</h2>
-          <p className="text-slate-300 mb-8 text-lg">
-            New reviews, honest comparisons, and money-saving deals — delivered every Thursday.
-          </p>
-          <NewsletterForm dark />
-          <p className="text-slate-500 text-xs mt-4">No spam. Unsubscribe anytime.</p>
         </div>
       </section>
 

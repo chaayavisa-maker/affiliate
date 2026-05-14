@@ -3,21 +3,18 @@
 Main orchestrator — runs every day via GitHub Actions.
 
 Pipeline:
-  1. Build ContentCatalogue  (single disk scan — reads title, description, slug,
-                               category from every existing MDX file)
-  2. Keyword research         (semantic dedup + category-weighted seed selection)
-  3. Pre-flight check         (title-level duplicate check BEFORE any writing)
-  4. Content generation + SEO (retried up to MAX_RETRIES on fixable failures)
-  5. Guardrail validation     (format / quality / fact / reflection)
-  6. Publish + catalogue update (register_new() keeps in-run state current so
-                                  article 2 can't duplicate article 1 in same run)
+  1. Keyword research  (semantic dedup at keyword level)
+  2. Pre-flight check  (title-level duplicate check BEFORE any writing)
+  3. Content generation + SEO  (retried up to MAX_RETRIES on fixable failures)
+  4. Guardrail validation      (format / quality / fact / reflection)
+  5. Publish
 
-Duplicate topics are caught in Steps 2 and 3, and skipped immediately — no LLM
-tokens are wasted writing an article that will be rejected for topic overlap.
+Duplicate topics are caught in Step 2 and skipped immediately — no LLM tokens
+are wasted writing an article that will be rejected for topic overlap.
 
-Retries are only triggered for fixable issues (word count, format, banned
-phrases, low reflection score). Non-retryable failures (duplicates, fatal fact
-errors) abort that keyword immediately and move on.
+Retries are only triggered for fixable issues (word count, format, banned phrases,
+low reflection score). Non-retryable failures (duplicates, fatal fact errors)
+abort that keyword immediately and move on.
 """
 
 import json
@@ -32,7 +29,6 @@ from content_agent   import ContentAgent
 from seo_agent       import SEOAgent
 from publisher_agent import PublisherAgent
 from guardrail_agent import GuardrailAgent, MAX_RETRIES
-from content_catalogue import ContentCatalogue
 
 logging.basicConfig(
     level=logging.INFO,
@@ -53,27 +49,17 @@ def run():
         log.error("GROQ_API_KEY not set — get a free key at console.groq.com")
         sys.exit(1)
 
-    # ── Step 0: Build the shared content catalogue ─────────────────────────────
-    # Scans the MDX posts directory once. Both keyword_agent and guardrail_agent
-    # read from this same instance, so they always agree on what exists.
-    log.info("Step 0: Building content catalogue from existing posts")
-    catalogue = ContentCatalogue()
-    log.info(
-        f"         {len(catalogue.all_entries())} articles loaded | "
-        f"coverage: {catalogue.coverage_by_category()}"
-    )
-
-    keyword_agent   = KeywordAgent(groq_key, catalogue)
+    keyword_agent   = KeywordAgent(groq_key)
     content_agent   = ContentAgent(groq_key)
     seo_agent       = SEOAgent(groq_key)
-    guardrail_agent = GuardrailAgent(groq_key, catalogue)
+    guardrail_agent = GuardrailAgent(groq_key)
     publisher       = PublisherAgent()
 
     published: list[str] = []
     skipped:   list[str] = []
 
     # ── Step 1: Keyword research ───────────────────────────────────────────────
-    log.info("Step 1: Keyword research (category-weighted + semantic dedup)")
+    log.info("Step 1: Keyword research (with semantic dedup)")
     keywords = keyword_agent.get_keywords(count=ARTICLES_PER_RUN)
     if not keywords:
         log.error("No fresh keywords found — all topics already covered. Exiting.")
@@ -166,12 +152,6 @@ def run():
         path = publisher.publish(article)
         published.append(path)
         log.info(f"  Published: {path}")
-
-        # ── Update catalogue so the next keyword in this run sees this article ──
-        # Without this, article 2 could be a near-duplicate of article 1 because
-        # article 1 isn't on disk yet when article 2's dedup checks run.
-        catalogue.register_new(article)
-        log.info("  Catalogue updated with newly published article")
 
         if guardrail_result and guardrail_result.reflection_feedback:
             log.info(f"  Editor reflection:\n{guardrail_result.reflection_feedback}")
