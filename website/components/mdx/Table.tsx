@@ -48,7 +48,18 @@ export function Thead(props: HTMLAttributes<HTMLTableSectionElement>) {
 }
 
 export function Tbody(props: HTMLAttributes<HTMLTableSectionElement>) {
-  return <tbody className="bg-white" {...props} />;
+  return (
+    <tbody
+      className={[
+        'bg-white divide-y divide-slate-100',
+        '[&>tr:first-child]:bg-gradient-to-r',
+        '[&>tr:first-child]:from-amber-50',
+        '[&>tr:first-child]:to-yellow-50/60',
+        '[&>tr:first-child]:shadow-[inset_4px_0_0_#f59e0b]',
+      ].join(' ')}
+      {...props}
+    />
+  );
 }
 
 export function Th(props: ThHTMLAttributes<HTMLTableCellElement>) {
