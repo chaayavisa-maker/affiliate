@@ -1,5 +1,6 @@
 import { getAllPosts, getPostBySlug, extractToc } from '@/lib/posts';
-import { MDXRemote } from 'next-mdx-remote/rsc';
+import { MDXRemote, compileMDX } from 'next-mdx-remote/rsc';
+import remarkGfm from 'remark-gfm';
 import { Table, Thead, Tbody, Th, Td, Tr } from '@/components/mdx/Table';
 import { notFound } from 'next/navigation';
 import { format } from 'date-fns';
@@ -80,7 +81,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 /* ── Page ─────────────────────────────────────────────────────────────────── */
-export default function PostPage({ params }: Props) {
+export default async function PostPage({ params }: Props) {
   const post = getPostBySlug(params.slug);
   if (!post) notFound();
 
@@ -88,6 +89,15 @@ export default function PostPage({ params }: Props) {
   const related  = allPosts.filter((p) => p.slug !== post.slug && p.category === post.category).slice(0, 3);
   const catMeta  = CAT[post.category];
   const toc      = extractToc(post.content);
+  const mdxSource = await compileMDX({
+    source: post.content,
+    options: {
+      parseFrontmatter: false,
+      mdxOptions: {
+        remarkPlugins: [remarkGfm],
+      },
+    },
+  });
 
   const publishedFmt = format(new Date(post.date), 'MMMM d, yyyy');
   const updatedFmt   = format(new Date(post.updatedDate), 'MMMM d, yyyy');
@@ -216,7 +226,7 @@ export default function PostPage({ params }: Props) {
             {/* Article body */}
             <div className="prose max-w-none">
               <MDXRemote
-                source={post.content}
+                source={mdxSource}
                 components={{ table: Table, thead: Thead, tbody: Tbody, th: Th, td: Td, tr: Tr }}
               />
             </div>
