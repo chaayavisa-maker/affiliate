@@ -180,19 +180,34 @@ Same format as Tool 1 Review above.
 Same format as Tool 1 Review above.
 
 ## Comparison Table
-Rich markdown table with these EXACT columns:
+Create a rich markdown table with these EXACT columns in this EXACT order:
 Tool | Best For | Price | Free Plan | Key Strength | Ease of Use | Our Rating
 
-Column rules:
-- "Price": exact price like "$49/mo" — no extra words (renders bold automatically)
-- "Free Plan": write "✓ Free tier" or "✓ X-day trial" when a free option exists;
-  write "✗ Paid only" when there is none (✓ renders as a green badge)
-- "Key Strength": single killer feature, max 6 words (e.g. "Brand Voice AI")
-- "Ease of Use": star rating using ★ (filled) and ☆ (empty), e.g. "★★★★☆" for 4/5
-  (these render in amber automatically)
-- "Our Rating": same star format as Ease of Use
-- "Best For": short audience phrase, max 5 words
-- Put the best overall tool in the first data row
+CRITICAL TABLE FORMATTING RULES:
+1. Start the table with the header row: | Tool | Best For | Price | Free Plan | Key Strength | Ease of Use | Our Rating |
+2. Follow with the separator row: | --- | --- | --- | --- | --- | --- | --- |
+3. Each data row MUST have exactly 7 pipe-separated cells
+4. Every row MUST start and end with a pipe character |
+5. Do NOT add extra spaces or formatting inside cells
+6. Do NOT add markdown bold/italic formatting inside table cells
+7. Do NOT add line breaks within cells
+
+Column content rules:
+- "Tool": tool name only (max 20 chars)
+- "Best For": short audience phrase, max 5 words (no markdown)
+- "Price": exact price like "$49/mo" or "$20/mo" — ONLY the price, no other text
+- "Free Plan": write "✓ Free tier" or "✓ X-day trial" when free option exists; write "✗ Paid only" when there is none
+- "Key Strength": single killer feature, max 6 words, no markdown (e.g. "Brand Voice AI" not "**Brand Voice AI**")
+- "Ease of Use": star rating using ONLY ★ (filled) and ☆ (empty), e.g. "★★★★☆" for 4/5 — EXACTLY 5 stars total
+- "Our Rating": same star format as Ease of Use — EXACTLY 5 stars total
+- Put the best overall tool in the first data row (it gets highlighted with gold styling)
+
+Example format (3 tools):
+| Tool | Best For | Price | Free Plan | Key Strength | Ease of Use | Our Rating |
+| --- | --- | --- | --- | --- | --- | --- |
+| Jasper AI | Content Teams | $49/mo | ✗ Paid only | Brand Voice AI | ★★★★★ | ★★★★☆ |
+| Copy.ai | Budget Writers | $49/mo | ✓ Free tier | Affordable Plans | ★★★★☆ | ★★★★☆ |
+| Writesonic | Solopreneurs | $19/mo | ✓ Free tier | Low Price | ★★★★☆ | ★★★☆☆ |
 
 ## Frequently Asked Questions  [MINIMUM 200 words]
 3 questions real buyers ask, with 2-3 sentence answers each. Use **bold** for the question.
