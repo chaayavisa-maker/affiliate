@@ -189,9 +189,6 @@ export default function HomePage() {
           </div>
         </section>
       )}
-    </>
-  );
-}
 
       {/* ── Categories ── */}
       <section className="max-w-6xl mx-auto px-4 py-14">
