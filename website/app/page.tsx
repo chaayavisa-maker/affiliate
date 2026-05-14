@@ -1,5 +1,26 @@
 import { getAllPosts } from '@/lib/posts';
 import { format } from 'date-fns';
+import type { Metadata } from 'next';
+import { SITE_NAME, SITE_TAGLINE, SITE_DESC, SITE_URL } from '@/lib/site';
+
+export const metadata: Metadata = {
+  title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+  description: SITE_DESC,
+  openGraph: {
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    description: SITE_DESC,
+    url: SITE_URL,
+    type: 'website',
+    images: [
+      {
+        url: `${SITE_URL}/og-home.png`,
+        width: 1200,
+        height: 630,
+        alt: SITE_NAME,
+      },
+    ],
+  },
+};
 
 const CATEGORY_META: Record<string, { icon: string; label: string; desc: string; color: string }> = {
   writing:      { icon: '✍️', label: 'AI Writing',     desc: 'Copywriting, blogs, essays',    color: 'from-violet-100 to-purple-100' },
@@ -19,7 +40,6 @@ const TOP_TOOLS = [
 export default function HomePage() {
   const posts = getAllPosts();
   const featured = posts.slice(0, 3);
-  const recent = posts.slice(0, 6);
   const categories = Object.entries(CATEGORY_META);
 
   // Honest stats derived from real data
@@ -28,15 +48,33 @@ export default function HomePage() {
 
   return (
     <>
+      {/* ── Schema.org Organization ── */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            name: SITE_NAME,
+            url: SITE_URL,
+            logo: `${SITE_URL}/favicon.svg`,
+            description: SITE_DESC,
+            sameAs: [
+              'https://twitter.com/aireviewstack',
+            ],
+          }),
+        }}
+      />
+
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white py-24 px-4">
-        <div className="absolute inset-0 opacity-10 pointer-events-none">
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white py-24 px-4" role="region" aria-label="Hero section">
+        <div className="absolute inset-0 opacity-10 pointer-events-none" aria-hidden="true">
           <div className="absolute top-10 left-1/4 w-96 h-96 bg-blue-500 rounded-full blur-3xl" />
           <div className="absolute bottom-10 right-1/4 w-64 h-64 bg-violet-500 rounded-full blur-3xl" />
         </div>
         <div className="relative max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-blue-500/20 border border-blue-400/30 rounded-full px-4 py-1.5 text-blue-300 text-sm font-medium mb-6 animate-fadeUp">
-            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse inline-block" />
+            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse inline-block" aria-hidden="true" />
             Independent reviews · No paid placements
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight animate-fadeUp delay-100" style={{fontFamily:'Sora,sans-serif'}}>
@@ -47,10 +85,10 @@ export default function HomePage() {
             We test AI tools with real accounts — honest reviews, real benchmarks, zero paid placements.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center animate-fadeUp delay-300">
-            <a href="/blog" className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3.5 rounded-xl font-semibold transition-colors shadow-lg shadow-blue-900/30">
+            <a href="/blog" className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3.5 rounded-xl font-semibold transition-colors shadow-lg shadow-blue-900/30" role="button">
               Browse All Reviews
             </a>
-            <a href="/tools" className="bg-white/10 hover:bg-white/20 text-white px-8 py-3.5 rounded-xl font-semibold border border-white/20 transition-colors">
+            <a href="/tools" className="bg-white/10 hover:bg-white/20 text-white px-8 py-3.5 rounded-xl font-semibold border border-white/20 transition-colors" role="button">
               Tools Directory
             </a>
           </div>
@@ -77,7 +115,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Top Picks ── */}
-      <section className="max-w-6xl mx-auto px-4 py-14">
+      <section className="max-w-6xl mx-auto px-4 py-14" role="region" aria-label="Editor's top picks">
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-2xl font-bold text-slate-900" style={{fontFamily:'Sora,sans-serif'}}>🏆 Editor Top Picks</h2>
@@ -87,31 +125,32 @@ export default function HomePage() {
         </div>
         <div className="grid md:grid-cols-3 gap-5">
           {TOP_TOOLS.map((tool) => (
-            <div key={tool.name} className="bg-white border border-slate-200 rounded-2xl p-5 card-hover shadow-sm">
+            <article key={tool.name} className="bg-white border border-slate-200 rounded-2xl p-5 card-hover shadow-sm">
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">{tool.cat}</span>
                   <h3 className="font-bold text-slate-900 text-lg mt-0.5" style={{fontFamily:'Sora,sans-serif'}}>{tool.name}</h3>
                 </div>
-                <span className="text-xs font-bold bg-amber-100 text-amber-700 border border-amber-200 px-2 py-1 rounded-lg whitespace-nowrap">{tool.badge}</span>
+                <span className="text-xs font-bold bg-amber-100 text-amber-700 border border-amber-200 px-2 py-1 rounded-lg whitespace-nowrap" aria-label={tool.badge}>{tool.badge}</span>
               </div>
               <div className="flex items-center gap-2 mb-4">
-                <span className="text-amber-400">{'★'.repeat(Math.round(tool.rating))}</span>
+                <span className="text-amber-400" aria-label={`${tool.rating} out of 5 stars`}>{'★'.repeat(Math.round(tool.rating))}</span>
                 <span className="text-slate-600 font-semibold text-sm">{tool.rating}</span>
                 <span className="text-slate-400 text-sm ml-auto">{tool.price}</span>
               </div>
               <a href={tool.url} rel="nofollow sponsored" target="_blank"
-                className="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-4 rounded-xl text-sm font-semibold transition-colors">
+                className="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-4 rounded-xl text-sm font-semibold transition-colors"
+                aria-label={`Open ${tool.name} in new window`}>
                 {tool.cta} →
               </a>
-            </div>
+            </article>
           ))}
         </div>
       </section>
 
       {/* ── Featured Reviews ── */}
       {featured.length > 0 && (
-        <section className="bg-white py-14">
+        <section className="bg-white py-14" role="region" aria-label="Featured reviews">
           <div className="max-w-6xl mx-auto px-4">
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-2xl font-bold text-slate-900" style={{fontFamily:'Sora,sans-serif'}}>📰 Featured Reviews</h2>
@@ -121,33 +160,38 @@ export default function HomePage() {
               {featured.map((post, i) => {
                 const meta = CATEGORY_META[post.category] ?? { icon: '🤖', color: 'from-slate-100 to-gray-100', label: post.category, desc: '' };
                 return (
-                  <a key={post.slug} href={`/blog/${post.slug}`}
+                  <article key={post.slug}
                     className="group bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden card-hover animate-fadeUp"
                     style={{animationDelay:`${i*0.1}s`}}>
-                    <div className={`bg-gradient-to-br ${meta.color} h-40 flex items-center justify-center text-5xl`}>
-                      {meta.icon}
-                    </div>
-                    <div className="p-5">
-                      <span className="inline-block bg-blue-50 text-blue-700 text-xs font-semibold px-2.5 py-1 rounded-full mb-2.5 capitalize">
-                        {meta.label}
-                      </span>
-                      <h3 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-2 mb-2" style={{fontFamily:'Sora,sans-serif'}}>
-                        {post.title}
-                      </h3>
-                      <p className="text-slate-500 text-sm line-clamp-2 mb-3">{post.description}</p>
-                      <div className="flex items-center text-xs text-slate-400 gap-2">
-                        <span>{format(new Date(post.date), 'MMM d, yyyy')}</span>
-                        <span>·</span>
-                        <span>{post.readingTime}</span>
+                    <a href={`/blog/${post.slug}`} className="block">
+                      <div className={`bg-gradient-to-br ${meta.color} h-40 flex items-center justify-center text-5xl`} aria-hidden="true">
+                        {meta.icon}
                       </div>
-                    </div>
-                  </a>
+                      <div className="p-5">
+                        <span className="inline-block bg-blue-50 text-blue-700 text-xs font-semibold px-2.5 py-1 rounded-full mb-2.5 capitalize">
+                          {meta.label}
+                        </span>
+                        <h3 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-2 mb-2" style={{fontFamily:'Sora,sans-serif'}}>
+                          {post.title}
+                        </h3>
+                        <p className="text-slate-500 text-sm line-clamp-2 mb-3">{post.description}</p>
+                        <div className="flex items-center text-xs text-slate-400 gap-2">
+                          <time dateTime={post.date}>{format(new Date(post.date), 'MMM d, yyyy')}</time>
+                          <span>·</span>
+                          <span>{post.readingTime}</span>
+                        </div>
+                      </div>
+                    </a>
+                  </article>
                 );
               })}
             </div>
           </div>
         </section>
       )}
+    </>
+  );
+}
 
       {/* ── Categories ── */}
       <section className="max-w-6xl mx-auto px-4 py-14">

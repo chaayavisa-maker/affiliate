@@ -23,23 +23,48 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_NAME}`,
   },
   description: SITE_DESC,
+  keywords: ['AI tools', 'AI reviews', 'AI comparisons', 'software reviews', 'AI chatbots', 'AI writing', 'AI coding'],
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  formatDetection: {
+    email: false,
+    telephone: false,
+    address: false,
+  },
   icons: {
     icon: '/favicon.svg',
     shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
   },
   openGraph: {
     type: 'website',
     locale: 'en_US',
     siteName: SITE_NAME,
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    description: SITE_DESC,
+    url: SITE_URL,
   },
   twitter: {
     card: 'summary_large_image',
     site: TWITTER_HANDLE,
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    description: SITE_DESC,
   },
   robots: {
     index: true,
     follow: true,
-    googleBot: { index: true, follow: true, 'max-image-preview': 'large' },
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ?? undefined,
   },
 };
 
@@ -93,48 +118,48 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           )}
         </div>
 
-        <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
-          <nav className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
+        <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm" role="banner">
+          <nav className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-4" role="navigation" aria-label="Main navigation">
 
             {/* Logo */}
-            <a href="/" className="flex items-center gap-2 font-bold text-xl text-blue-600 shrink-0" style={{fontFamily:'Sora,sans-serif'}}>
-              <span className="text-2xl">🤖</span>
+            <a href="/" className="flex items-center gap-2 font-bold text-xl text-blue-600 shrink-0" style={{fontFamily:'Sora,sans-serif'}} aria-label="AI Tools Hub Home">
+              <span className="text-2xl" aria-hidden="true">🤖</span>
               <span className="hidden sm:inline">{SITE_NAME}</span>
               <span className="sm:hidden">AIHub</span>
             </a>
 
             {/* Desktop nav */}
             <div className="hidden md:flex items-center gap-1 text-sm font-medium text-slate-600">
-              <a href="/blog" className="px-3 py-2 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition-colors">
+              <a href="/blog" className="px-3 py-2 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition-colors" title="Browse all AI tool reviews">
                 Reviews
               </a>
-              <a href="/tools" className="px-3 py-2 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition-colors">
+              <a href="/tools" className="px-3 py-2 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition-colors" title="View all AI tools directory">
                 Tools Directory
               </a>
 
               {/* Categories dropdown */}
               <div className="relative group">
-                <button className="px-3 py-2 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition-colors flex items-center gap-1">
+                <button className="px-3 py-2 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition-colors flex items-center gap-1" aria-label="Browse categories" aria-expanded="false" aria-haspopup="true">
                   Categories
-                  <svg className="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
-                <div className="absolute top-full left-0 mt-1 w-52 bg-white border border-slate-200 rounded-xl shadow-lg py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                <div className="absolute top-full left-0 mt-1 w-52 bg-white border border-slate-200 rounded-xl shadow-lg py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50" role="menu">
                   {CATEGORIES.map((c) => (
                     <a key={c.href} href={c.href}
-                      className="block px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-700 transition-colors">
+                      className="block px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-700 transition-colors" role="menuitem">
                       {c.label}
                     </a>
                   ))}
                 </div>
               </div>
 
-              <a href="/search" className="px-3 py-2 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition-colors flex items-center gap-1.5">
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <a href="/search" className="px-3 py-2 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition-colors flex items-center gap-1.5" title="Search AI tools">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
-                Search
+                <span className="hidden lg:inline">Search</span>
               </a>
             </div>
 
@@ -147,17 +172,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
         <main className="min-h-screen">{children}</main>
 
-        <footer className="bg-slate-900 text-slate-400 py-14 mt-20">
+        <footer className="bg-slate-900 text-slate-400 py-14 mt-20" role="contentinfo">
           <div className="max-w-6xl mx-auto px-4">
             <div className="grid md:grid-cols-4 gap-8 mb-10">
               <div>
                 <p className="text-white font-bold text-lg mb-2" style={{fontFamily:'Sora,sans-serif'}}>🤖 {SITE_NAME}</p>
                 <p className="text-sm leading-relaxed">Independent, hands-on reviews of AI tools. We test so you don&apos;t waste money.</p>
-                <div className="flex gap-3 mt-4">
-                  <a href={TWITTER_URL} className="text-slate-500 hover:text-white transition-colors text-lg" aria-label="Twitter">𝕏</a>
-                </div>
+                <nav className="flex gap-3 mt-4" aria-label="Social media links">
+                  <a href={TWITTER_URL} className="text-slate-500 hover:text-white transition-colors text-lg" aria-label="Follow us on X (Twitter)">𝕏</a>
+                </nav>
               </div>
-              <div>
+              <nav>
                 <p className="text-white font-semibold mb-3 text-sm uppercase tracking-wide">Categories</p>
                 <ul className="text-sm space-y-2">
                   {['Writing', 'Coding', 'Design', 'Productivity', 'Chatbots', 'Video'].map((c) => (
@@ -166,8 +191,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                     </li>
                   ))}
                 </ul>
-              </div>
-              <div>
+              </nav>
+              <nav>
                 <p className="text-white font-semibold mb-3 text-sm uppercase tracking-wide">Resources</p>
                 <ul className="text-sm space-y-2">
                   <li><a href="/tools" className="hover:text-white transition-colors">Tools Directory</a></li>
@@ -176,8 +201,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   <li><a href="/about" className="hover:text-white transition-colors">About</a></li>
                   <li><a href="/contact" className="hover:text-white transition-colors">Contact</a></li>
                 </ul>
-              </div>
-              <div>
+              </nav>
+              <nav>
                 <p className="text-white font-semibold mb-3 text-sm uppercase tracking-wide">Legal</p>
                 <ul className="text-sm space-y-2">
                   <li><a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a></li>
@@ -186,7 +211,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 <div className="mt-4 p-3 bg-slate-800 rounded-xl text-xs leading-relaxed">
                   ⚠️ This site contains affiliate links. We may earn commissions at no cost to you.
                 </div>
-              </div>
+              </nav>
             </div>
             <div className="border-t border-slate-800 pt-6 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs">
               <p>© {new Date().getFullYear()} {SITE_NAME}. All rights reserved.</p>
