@@ -131,16 +131,27 @@ class GuardrailAgent:
                 pass
 
         prompt = f"""You are a content strategy editor. Decide whether a proposed new article
-substantially duplicates any article already on the site.
+is a TRUE duplicate of any article already on the site.
 
 Proposed title: "{title}"
 
 Existing article titles:
 {json.dumps(existing_titles, indent=2)}
 
-DUPLICATE if: the new article would review essentially the same tools for the same audience.
-NOT a duplicate if: it targets a clearly different use-case, audience segment, or tool set.
-A year change alone does NOT make it unique.
+A TRUE DUPLICATE requires ALL THREE of these to be true:
+  1. The new article reviews more than 60% of the same specific tools
+  2. It targets the same primary audience (e.g. both for "beginners" or both for "enterprises")
+  3. It has the same core intent (both compare, both review, both rank)
+
+NOT a duplicate if ANY of these are true:
+  - It focuses on a different audience (e.g. "for freelancers" vs "for enterprises")
+  - It covers a meaningfully different use-case (e.g. "coding" vs "writing")
+  - It is a head-to-head comparison (X vs Y) while the existing is a best-of list
+  - It covers a sub-niche not directly addressed in any existing title
+  - Partial keyword overlap alone is NOT enough to call it a duplicate
+
+When in doubt, return is_duplicate: false. It is better to publish a slightly similar
+article than to starve the site of fresh content.
 
 Reply with ONLY valid JSON (no markdown):
 {{"is_duplicate": true_or_false, "similar_to": "closest existing title or null", "reason": "one sentence"}}"""
@@ -406,19 +417,26 @@ Reply with ONLY valid JSON (no markdown):
 
         new_title = article.get("title", article.get("keyword", ""))
         prompt = f"""You are a content strategy editor. Determine whether a proposed new article
-substantially duplicates any article already on the site.
+is a TRUE duplicate of any article already on the site.
 
 Proposed article: "{new_title}"
 
 Already published articles:
 {json.dumps(existing_titles, indent=2)}
 
-A DUPLICATE means the new article would cover essentially the same:
-- Primary tools being reviewed (>50% overlap)
-- Core topic/intent (e.g. both compare writing AI tools for bloggers)
+A TRUE DUPLICATE requires ALL THREE of these to be true:
+  1. The new article reviews more than 60% of the same specific tools
+  2. It targets the same primary audience (e.g. both for "beginners" or both for "enterprises")
+  3. It has the same core intent (both compare, both review, both rank)
 
-A year change alone (2025 → 2026) does NOT make it unique if the content would be identical.
-A completely different set of tools or a clearly narrower sub-niche IS different enough.
+NOT a duplicate if ANY of these are true:
+  - It focuses on a different audience (e.g. "for freelancers" vs "for enterprises")
+  - It covers a different use-case or sub-niche not directly addressed in any existing title
+  - It is a head-to-head comparison (X vs Y) while the existing is a best-of list
+  - Partial keyword overlap alone is NOT enough to call it a duplicate
+
+When in doubt, return is_duplicate: false. It is better to publish a slightly similar
+article than to starve the site of fresh content.
 
 Reply with ONLY valid JSON (no markdown, no preamble):
 {{"is_duplicate": true_or_false, "similar_to": "title of closest match, or null", "overlap_reason": "one sentence"}}"""

@@ -1,0 +1,376 @@
+"""
+Content agent: generates complete 1500-2000 word affiliate review articles.
+Uses Groq LLaMA 3.3 70B (free tier). Embeds affiliate links automatically.
+Produces MDX-compatible markdown with frontmatter.
+"""
+
+import json
+import re
+import time
+import logging
+from datetime import datetime
+from pathlib import Path
+
+from groq import Groq
+
+log = logging.getLogger(__name__)
+
+# Affiliate programs with real programs you should join:
+# - ShareASale: app.shareasale.com
+# - Impact: impact.com
+# - PartnerStack: partnerstack.com (best for SaaS)
+AFFILIATE_PRODUCTS = {
+    "writing": [
+        {"name": "Jasper AI",    "url": "https://www.jasper.ai?fpr=YOUR_ID",         "commission": "30%",         "price": "$49/mo"},
+        {"name": "Copy.ai",      "url": "https://www.copy.ai?via=YOUR_ID",             "commission": "45%",         "price": "$49/mo"},
+        {"name": "Writesonic",   "url": "https://writesonic.com?via=YOUR_ID",          "commission": "30%",         "price": "$19/mo"},
+    ],
+    "image": [
+        {"name": "Midjourney",   "url": "https://midjourney.com",                      "commission": "N/A",         "price": "$10/mo"},
+        {"name": "Adobe Firefly","url": "https://adobe.com/products/firefly?via=YOUR_ID","commission": "85%",       "price": "$4.99/mo"},
+        {"name": "Canva AI",     "url": "https://canva.com/affiliates/YOUR_ID",        "commission": "30%",         "price": "$15/mo"},
+    ],
+    "coding": [
+        {"name": "GitHub Copilot","url": "https://github.com/features/copilot",        "commission": "N/A",         "price": "$10/mo"},
+        {"name": "Cursor",       "url": "https://cursor.sh",                            "commission": "N/A",         "price": "$20/mo"},
+        {"name": "Tabnine",      "url": "https://www.tabnine.com?ref=YOUR_ID",         "commission": "20%",         "price": "$12/mo"},
+    ],
+    "presentation": [
+        {"name": "Beautiful.ai", "url": "https://www.beautiful.ai?ref=YOUR_ID",        "commission": "20%",         "price": "$12/mo"},
+        {"name": "Gamma",        "url": "https://gamma.app?ref=YOUR_ID",               "commission": "25%",         "price": "$10/mo"},
+        {"name": "Tome",         "url": "https://tome.app?ref=YOUR_ID",                "commission": "20%",         "price": "$16/mo"},
+    ],
+    "video": [
+        {"name": "Runway",       "url": "https://runwayml.com?ref=YOUR_ID",            "commission": "20%",         "price": "$15/mo"},
+        {"name": "Synthesia",    "url": "https://www.synthesia.io?via=YOUR_ID",        "commission": "25%",         "price": "$29/mo"},
+        {"name": "Descript",     "url": "https://www.descript.com?lmref=YOUR_ID",      "commission": "15%",         "price": "$24/mo"},
+    ],
+    "seo": [
+        {"name": "Surfer SEO",   "url": "https://surferseo.com?fp_ref=YOUR_ID",        "commission": "25%",         "price": "$89/mo"},
+        {"name": "Frase",        "url": "https://www.frase.io?ref=YOUR_ID",            "commission": "30%",         "price": "$15/mo"},
+        {"name": "NeuronWriter", "url": "https://neuronwriter.com?ref=YOUR_ID",        "commission": "30%",         "price": "$23/mo"},
+    ],
+    "transcription": [
+        {"name": "Otter.ai",     "url": "https://otter.ai?ref=YOUR_ID",               "commission": "15%",         "price": "$17/mo"},
+        {"name": "Fireflies.ai", "url": "https://fireflies.ai?ref=YOUR_ID",           "commission": "20%",         "price": "$10/mo"},
+        {"name": "Descript",     "url": "https://www.descript.com?lmref=YOUR_ID",     "commission": "15%",         "price": "$24/mo"},
+    ],
+    "chatbot": [
+        {"name": "Claude Pro",   "url": "https://claude.ai",                           "commission": "N/A",         "price": "$20/mo"},
+        {"name": "ChatGPT Plus", "url": "https://chat.openai.com",                     "commission": "N/A",         "price": "$20/mo"},
+        {"name": "Perplexity AI","url": "https://perplexity.ai?ref=YOUR_ID",           "commission": "20%",         "price": "$20/mo"},
+    ],
+    "productivity": [
+        {"name": "Notion AI",    "url": "https://notion.so?r=YOUR_ID",                "commission": "20%",         "price": "$10/mo"},
+        {"name": "ClickUp AI",   "url": "https://clickup.com?ref=YOUR_ID",            "commission": "20%",         "price": "$7/mo"},
+        {"name": "Motion",       "url": "https://www.usemotion.com?ref=YOUR_ID",       "commission": "20%",         "price": "$34/mo"},
+    ],
+    "email": [
+        {"name": "Lavender",     "url": "https://www.lavender.ai?ref=YOUR_ID",        "commission": "20%",         "price": "$29/mo"},
+        {"name": "Smartwriter",  "url": "https://smartwriter.ai?ref=YOUR_ID",          "commission": "30%",         "price": "$49/mo"},
+        {"name": "Writesonic",   "url": "https://writesonic.com?via=YOUR_ID",          "commission": "30%",         "price": "$19/mo"},
+    ],
+    "grammar": [
+        {"name": "Grammarly",    "url": "https://grammarly.com?via=YOUR_ID",          "commission": "$20/sale",    "price": "$12/mo"},
+        {"name": "ProWritingAid","url": "https://prowritingaid.com?afid=YOUR_ID",      "commission": "25%",         "price": "$10/mo"},
+        {"name": "Wordtune",     "url": "https://www.wordtune.com?ref=YOUR_ID",        "commission": "20%",         "price": "$10/mo"},
+    ],
+    "research": [
+        {"name": "Perplexity AI","url": "https://perplexity.ai?ref=YOUR_ID",          "commission": "20%",         "price": "$20/mo"},
+        {"name": "Elicit",       "url": "https://elicit.com",                          "commission": "N/A",         "price": "$10/mo"},
+        {"name": "Consensus",    "url": "https://consensus.app?ref=YOUR_ID",           "commission": "N/A",         "price": "$9/mo"},
+    ],
+}
+
+# Ordered most-specific → least-specific so the first match wins
+_CATEGORY_RULES: list[tuple[str, list[str]]] = [
+    ("presentation", ["presentation", "slide", "pitch deck", "powerpoint", "keynote", "deck maker"]),
+    ("video",        ["video", "reel", "clip", "film", "animation", "avatar"]),
+    ("seo",          ["seo", "rank", "search optimiz", "keyword research", "backlink"]),
+    ("transcription",["transcri", "caption", "subtitle", "meeting note", "voice-to-text", "speech-to-text"]),
+    ("chatbot",      ["chatbot", "chat assistant", "llm", "chatgpt alternative", "conversational ai"]),
+    ("email",        ["email", "cold outreach", "newsletter", "inbox"]),
+    ("grammar",      ["grammar", "spell", "proofreading", "editing tool"]),
+    ("research",     ["research", "literature review", "academic", "citation", "fact-check"]),
+    ("coding",       ["cod", "developer", "programming", "github", "debug"]),
+    ("image",        ["image", "art", "photo", "visual", "illustration", "design"]),
+    ("writing",      ["writ", "copy", "content", "blog", "essay", "article"]),
+    ("productivity", []),  # catch-all — always matches
+]
+
+
+def _sanitise_tables(content: str) -> str:
+    """
+    Ensure every GFM markdown table is an unbroken block (no blank lines between rows).
+    LLMs sometimes insert blank lines inside tables which breaks the GFM parser.
+    """
+    import re
+    lines = content.splitlines()
+    result = []
+    in_table = False
+
+    for line in lines:
+        is_table_row = bool(re.match(r'^\s*\|', line))
+        if is_table_row:
+            in_table = True
+            result.append(line)
+        elif in_table and line.strip() == '':
+            result.append('\x00BLANK\x00')
+        else:
+            if in_table:
+                flushed = []
+                while result and result[-1] == '\x00BLANK\x00':
+                    flushed.append('')
+                    result.pop()
+                result.extend(flushed)
+                in_table = False
+            result.append(line)
+
+    final = []
+    i = 0
+    while i < len(result):
+        if result[i] == '\x00BLANK\x00':
+            j = i + 1
+            while j < len(result) and result[j] == '\x00BLANK\x00':
+                j += 1
+            if j < len(result) and re.match(r'^\s*\|', result[j]):
+                i = j
+                continue
+            else:
+                final.append('')
+        else:
+            final.append(result[i])
+        i += 1
+
+    return '\n'.join(final)
+
+
+def _pick_products(keyword: str) -> list[dict]:
+    """Return the most relevant affiliate product list for the given keyword."""
+    kw = keyword.lower()
+    for category, signals in _CATEGORY_RULES:
+        if not signals or any(s in kw for s in signals):
+            return AFFILIATE_PRODUCTS[category]
+    return AFFILIATE_PRODUCTS["productivity"]
+
+
+def _slug(text: str) -> str:
+    text = text.lower()
+    text = re.sub(r'[^a-z0-9\s-]', '', text)
+    text = re.sub(r'\s+', '-', text.strip())
+    return text[:80]
+
+
+class ContentAgent:
+    def __init__(self, groq_api_key: str):
+        self.client = Groq(api_key=groq_api_key)
+
+    def write_article(self, keyword_data: dict, correction_brief: str = "") -> dict:
+        """
+        Generate a complete affiliate review article for the given keyword.
+
+        Args:
+            keyword_data:     Dict from KeywordAgent with 'keyword', 'intent', etc.
+            correction_brief: Non-empty string on retries — contains guardrail failure
+                              details so the model can fix specific problems.
+        """
+        keyword = keyword_data["keyword"]
+        products = _pick_products(keyword)
+        products_text = "\n".join(
+            f"- {p['name']}: {p['price']}, commission: {p['commission']}, link: {p['url']}"
+            for p in products
+        )
+
+        # On retries, prepend the correction brief so the model knows what to fix
+        retry_block = ""
+        if correction_brief:
+            retry_block = (
+                f"\n\nCRITICAL — THIS IS A RETRY. A previous draft was rejected. "
+                f"You MUST address ALL of the following issues in this new draft:\n"
+                f"{correction_brief}\n"
+            )
+
+        prompt = f"""You are an expert tech writer creating an affiliate review article.{retry_block}
+
+KEYWORD TARGET: "{keyword}"
+CURRENT YEAR: {datetime.utcnow().year}
+PRODUCTS TO REVIEW:
+{products_text}
+
+⚠️  LENGTH REQUIREMENT: The finished article MUST be at least 1,400 words.
+    Do NOT summarise or shorten any section. Write every section in full.
+    If you finish early, expand each tool review with more detail until you hit 1,400 words.
+
+Write the article following this structure. Word targets are MINIMUMS — exceed them freely:
+
+## Introduction  [MINIMUM 180 words]
+Write 2-3 paragraphs. Open with a relatable pain point, explain what this article covers,
+name all three tools, and include the primary keyword naturally in the first 100 words.
+
+## What to Look for in [Category]  [MINIMUM 220 words]
+Cover 5 criteria buyers care about: pricing tiers, ease of use, core features,
+integrations/API, and support quality. Write 2-3 sentences per criterion.
+
+## [Tool 1 Name] Review  [MINIMUM 300 words]
+- What it is and who it's best for (1 paragraph)
+- Key features (bullet list, at least 5 bullets with 1-sentence explanations each)
+- Pricing details (exact price from the product list above)
+- Pros section: at least 3 pros, 1-2 sentences each
+- Cons section: at least 2 honest cons, 1-2 sentences each
+- End with: [Try Tool Name →](EXACT_URL_FROM_PRODUCT_LIST)
+
+## [Tool 2 Name] Review  [MINIMUM 300 words]
+Same format as Tool 1 Review above.
+
+## [Tool 3 Name] Review  [MINIMUM 300 words]
+Same format as Tool 1 Review above.
+
+## Comparison Table
+Create a rich markdown table with these EXACT columns in this EXACT order:
+Tool | Best For | Price | Free Plan | Key Strength | Ease of Use | Our Rating
+
+CRITICAL TABLE FORMATTING RULES:
+1. Start the table with the header row: | Tool | Best For | Price | Free Plan | Key Strength | Ease of Use | Our Rating |
+2. Follow with the separator row: | --- | --- | --- | --- | --- | --- | --- |
+3. Each data row MUST have exactly 7 pipe-separated cells
+4. Every row MUST start and end with a pipe character |
+5. Do NOT add extra spaces or formatting inside cells
+6. Do NOT add markdown bold/italic formatting inside table cells
+7. Do NOT add line breaks within cells
+
+Column content rules:
+- "Tool": tool name only (max 20 chars)
+- "Best For": short audience phrase, max 5 words (no markdown)
+- "Price": exact price like "$49/mo" or "$20/mo" — ONLY the price, no other text
+- "Free Plan": write "✓ Free tier" or "✓ X-day trial" when free option exists; write "✗ Paid only" when there is none
+- "Key Strength": single killer feature, max 6 words, no markdown (e.g. "Brand Voice AI" not "**Brand Voice AI**")
+- "Ease of Use": star rating using ONLY ★ (filled) and ☆ (empty), e.g. "★★★★☆" for 4/5 — EXACTLY 5 stars total
+- "Our Rating": same star format as Ease of Use — EXACTLY 5 stars total
+- Put the best overall tool in the first data row (it gets highlighted with gold styling)
+
+Example format (3 tools):
+| Tool | Best For | Price | Free Plan | Key Strength | Ease of Use | Our Rating |
+| --- | --- | --- | --- | --- | --- | --- |
+| Jasper AI | Content Teams | $49/mo | ✗ Paid only | Brand Voice AI | ★★★★★ | ★★★★☆ |
+| Copy.ai | Budget Writers | $49/mo | ✓ Free tier | Affordable Plans | ★★★★☆ | ★★★★☆ |
+| Writesonic | Solopreneurs | $19/mo | ✓ Free tier | Low Price | ★★★★☆ | ★★★☆☆ |
+<<<<<<< HEAD
+=======
+
+CRITICAL: Do NOT put blank lines between table rows — the table must be one unbroken block.
+>>>>>>> b99b3678 (claude clean)
+
+## Frequently Asked Questions  [MINIMUM 200 words]
+3 questions real buyers ask, with 2-3 sentence answers each. Use **bold** for the question.
+
+## Conclusion  [MINIMUM 120 words]
+Summarise the key differences, give a clear "best pick" recommendation for different
+use cases, and end with a call-to-action sentence.
+
+RULES (violations will cause rejection):
+- Do NOT say "As an AI" or anything that reveals AI authorship
+- Write in first-person plural ("we tested", "our team found", "in our experience")
+- Include the target keyword naturally 8-12 times throughout
+- Use EXACT affiliate URLs from the product list above — do not invent URLs
+- Mention real limitations for each tool (no tool is perfect)
+- Use {datetime.utcnow().year} — never write 2024 or 2025
+
+Return the full article in markdown, starting with the ## Introduction heading.
+Do NOT include YAML frontmatter."""
+
+        log.info(f"Generating content for: {keyword}")
+        response = self.client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=6000,
+            temperature=0.6,
+        )
+        content = response.choices[0].message.content
+        content = _sanitise_tables(content)
+        time.sleep(2)
+
+        # Generate meta description
+        meta_prompt = f"""Write a 155-character SEO meta description for this article about "{keyword}".
+It must:
+- Include the keyword naturally
+- Have a clear value proposition  
+- End with a call to action
+Return ONLY the meta description, nothing else."""
+
+        meta_response = self.client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[{"role": "user", "content": meta_prompt}],
+            max_tokens=80,
+            temperature=0.4,
+        )
+        meta_description = meta_response.choices[0].message.content.strip().strip('"')
+        time.sleep(1)
+
+        # Extract H1/title
+        title_prompt = f"""Write an SEO-optimized H1 title for an article about "{keyword}".
+Rules:
+- 50-60 characters
+- Include the main keyword
+- Use a power word (Best, Ultimate, Complete, Top)
+- Use current year ({datetime.utcnow().year})
+Return ONLY the title, nothing else."""
+
+        title_response = self.client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[{"role": "user", "content": title_prompt}],
+            max_tokens=50,
+            temperature=0.4,
+        )
+        title = title_response.choices[0].message.content.strip().strip('"')
+        time.sleep(1)
+
+        return {
+            "keyword": keyword,
+            "title": title,
+            "slug": _slug(title),
+            "meta_description": meta_description,
+            "content": content,
+            "products": products,
+            "created_at": datetime.utcnow().isoformat(),
+            "category": _categorize(keyword),
+        }
+
+    def generate_title(self, keyword_data: dict) -> str:
+        """
+        Cheap pre-flight call: generate only the article title for a keyword.
+        Used by the orchestrator to run a duplicate check BEFORE spending tokens
+        on a full article. Returns an empty string on failure (caller should
+        treat that as a non-blocking warning, not a hard skip).
+        """
+        keyword = keyword_data.get("keyword", "")
+        prompt = (
+            f'Write an SEO-optimised H1 title for an article about "{keyword}".\n'
+            f"Rules:\n"
+            f"- 50-60 characters\n"
+            f"- Include the main keyword\n"
+            f"- Use a power word (Best, Ultimate, Complete, Top)\n"
+            f"- Use current year ({datetime.utcnow().year})\n"
+            f"Return ONLY the title, nothing else."
+        )
+        try:
+            resp = self.client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[{"role": "user", "content": prompt}],
+                max_tokens=50,
+                temperature=0.4,
+            )
+            title = resp.choices[0].message.content.strip().strip('"')
+            time.sleep(1)
+            return title
+        except Exception as e:
+            log.warning(f"[ContentAgent] generate_title failed for '{keyword}': {e}")
+            return ""
+
+
+def _categorize(keyword: str) -> str:
+    """Mirror the category logic from _CATEGORY_RULES for frontmatter tagging."""
+    kw = keyword.lower()
+    for category, signals in _CATEGORY_RULES:
+        if not signals or any(s in kw for s in signals):
+            return category
+    return "productivity"
