@@ -63,6 +63,9 @@ SEED_TOPICS_BY_CATEGORY: dict[str, list[str]] = {
         "AI tools for YouTube creators",
         "best AI avatar video makers",
         "AI video subtitle generators",
+        "AI tools for short-form video creators",
+        "best AI video script writers",
+        "AI screen recorder tools compared",
     ],
     "chatbots": [
         "best AI chatbots",
@@ -70,6 +73,9 @@ SEED_TOPICS_BY_CATEGORY: dict[str, list[str]] = {
         "best AI customer service chatbots",
         "AI chatbot builders for websites",
         "best AI assistants for productivity",
+        "best AI chatbots for small business",
+        "AI chatbots for lead generation",
+        "best Claude vs ChatGPT comparison",
     ],
     "productivity": [
         "best AI productivity tools",
@@ -78,6 +84,10 @@ SEED_TOPICS_BY_CATEGORY: dict[str, list[str]] = {
         "AI scheduling and task management tools",
         "AI summarizer tools compared",
         "best AI presentation makers",
+        "best AI research assistants",
+        "AI tools for project management",
+        "best AI document editors",
+        "AI tools for remote teams",
     ],
     "seo": [
         "best AI SEO tools",
@@ -86,6 +96,42 @@ SEED_TOPICS_BY_CATEGORY: dict[str, list[str]] = {
         "AI tools for link building",
         "best AI tools for digital marketing",
         "AI email marketing platforms compared",
+        "best AI tools for blogging",
+        "AI social media content tools compared",
+        "best AI tools for affiliate marketers",
+        "AI tools for e-commerce product descriptions",
+    ],
+    "audio": [
+        "best AI voice generators",
+        "best AI podcast editing tools",
+        "AI tools for musicians and producers",
+        "best AI text-to-speech tools",
+        "AI voice cloning tools compared",
+        "best AI transcription tools",
+        "AI noise cancellation tools for calls",
+    ],
+    "finance": [
+        "best AI tools for personal finance",
+        "AI tools for stock market analysis",
+        "best AI accounting software for small business",
+        "AI invoicing and bookkeeping tools compared",
+        "best AI tax preparation tools",
+    ],
+    "education": [
+        "best AI tools for students",
+        "AI tutoring tools compared",
+        "best AI tools for teachers",
+        "AI quiz and flashcard generators",
+        "best AI essay writing tools for students",
+        "AI language learning apps compared",
+    ],
+    "ecommerce": [
+        "best AI tools for Shopify stores",
+        "AI product description generators compared",
+        "best AI tools for Amazon sellers",
+        "AI pricing optimization tools",
+        "best AI chatbots for e-commerce",
+        "AI tools for dropshipping automation",
     ],
 }
 
@@ -257,7 +303,7 @@ class KeywordAgent:
 
         prompt = (
             "You are an SEO strategist specialising in the AI tools review niche.\n"
-            "Your job: generate 5 long-tail keyword topics for a new article.\n\n"
+            "Your job: generate 8 long-tail keyword topics for a new article.\n\n"
             f"Seed topic: \"{seed}\"\n\n"
             f"{coverage['summary_text']}\n\n"
             "Articles already published on the site:\n"
@@ -282,8 +328,8 @@ class KeywordAgent:
             response = self.client.chat.completions.create(
                 model="llama-3.3-70b-versatile",
                 messages=[{"role": "user", "content": prompt}],
-                max_tokens=600,
-                temperature=0.7,
+                max_tokens=900,
+                temperature=0.75,
             )
             raw = response.choices[0].message.content
             match = re.search(r"\[.*?\]", raw, re.DOTALL)
@@ -323,16 +369,16 @@ class KeywordAgent:
 
         prompt = (
             "You are a content strategy editor. Decide whether a new keyword topic\n"
-            "would produce an article that substantially duplicates content already on the site.\n\n"
+            "would produce a TRUE duplicate of content already on the site.\n\n"
             f"Candidate keyword: \"{candidate_keyword}\"\n\n"
             "Existing articles (category, title, description, tags):\n"
             f"{existing_block}\n\n"
-            "Overlap rules:\n"
-            "- DUPLICATE if: the candidate targets the same tools AND the same audience/use-case.\n"
-            "- NOT a duplicate if: it covers different tools, a different audience, a different\n"
-            "  use-case, or a meaningfully different comparison angle.\n"
-            "- A year change alone does NOT make it unique.\n"
-            "- Different tags or a different category is a strong signal it is NOT a duplicate.\n\n"
+            "A TRUE DUPLICATE requires ALL THREE:\n"
+            "  1. Reviews more than 60% of the same specific tools\n"
+            "  2. Targets the same primary audience\n"
+            "  3. Has the same core intent (compare vs review vs rank)\n"
+            "NOT a duplicate if the audience, use-case, or tool set differs meaningfully.\n"
+            "When in doubt return is_duplicate: false — prefer fresh content over blocking.\n\n"
             "Reply with ONLY valid JSON (no markdown):\n"
             "{\"is_duplicate\": true_or_false, "
             "\"similar_to\": \"closest existing title or null\", "

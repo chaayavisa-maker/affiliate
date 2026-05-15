@@ -60,7 +60,9 @@ def run():
 
     # ── Step 1: Keyword research ───────────────────────────────────────────────
     log.info("Step 1: Keyword research (with semantic dedup)")
-    keywords = keyword_agent.get_keywords(count=ARTICLES_PER_RUN)
+    # Request 3x more candidates than needed so pre-flight duplicate checks
+    # have a large pool to draw from — viable_keywords is capped to ARTICLES_PER_RUN later.
+    keywords = keyword_agent.get_keywords(count=ARTICLES_PER_RUN * 3)
     if not keywords:
         log.error("No fresh keywords found — all topics already covered. Exiting.")
         sys.exit(0)
@@ -94,6 +96,9 @@ def run():
         log.error("All candidate topics were duplicates — nothing to write today.")
         _write_summary(published, skipped)
         sys.exit(0)
+
+    # Cap to ARTICLES_PER_RUN — we fetched extras only for pre-flight filtering
+    viable_keywords = viable_keywords[:ARTICLES_PER_RUN]
 
     # ── Steps 3-5: Write → SEO → Guardrail → Publish ──────────────────────────
     for kw in viable_keywords:
