@@ -1,0 +1,66 @@
+name: Weekly Tools Enrichment
+
+on:
+  schedule:
+    # Every Monday at 6 AM UTC — runs before the daily content job at 8 AM
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (print changes but do not commit)'
+        required: false
+        default: 'false'
+        type: boolean
+
+jobs:
+  enrich-tools:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4.2.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5.6.0
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          cd agents
+          pip install -r requirements.txt
+
+      - name: Run tools enrichment agent
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: |
+          cd agents
+          python tools_enrichment_agent.py
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git diff --quiet website/public/tools.json && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit updated tools.json
+        if: steps.check_changes.outputs.changed == 'true' && inputs.dry_run != 'true'
+        run: |
+          git config user.name  "Tools Enrichment Bot"
+          git config user.email "bot@aireviewstack.org"
+          git add website/public/tools.json
+          git commit -m "chore(tools): weekly price & rating refresh $(date +'%Y-%m-%d')"
+          git push
+
+      - name: Upload enrichment log
+        uses: actions/upload-artifact@v4.6.2
+        if: always()
+        with:
+          name: enrichment-log-${{ github.run_id }}
+          path: agents/enrichment_log.json
+          retention-days: 90
