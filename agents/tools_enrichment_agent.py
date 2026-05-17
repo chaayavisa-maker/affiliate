@@ -35,7 +35,7 @@ from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 
-from duckduckgo_search import DDGS
+from ddgs import DDGS
 from groq import Groq
 
 # -- Logging -------------------------------------------------------------------
