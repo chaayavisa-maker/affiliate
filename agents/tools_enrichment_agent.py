@@ -48,7 +48,7 @@ log = logging.getLogger(__name__)
 
 # -- Paths ---------------------------------------------------------------------
 REPO_ROOT  = Path(__file__).parent.parent
-TOOLS_JSON = REPO_ROOT / "website" / "data" / "tools.json"
+TOOLS_JSON = REPO_ROOT / "website" / "public" / "tools.json"
 LOG_FILE   = Path(__file__).parent / "enrichment_log.json"
 
 # -- Config --------------------------------------------------------------------
