@@ -33,7 +33,7 @@ from pathlib import Path
 from typing import Any
 
 from groq import Groq
-from duckduckgo_search import DDGS
+from ddgs import DDGS
 
 # ── Logging ────────────────────────────────────────────────────────────────────
 logging.basicConfig(
