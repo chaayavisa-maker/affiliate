@@ -52,7 +52,7 @@ jobs:
         if: steps.check_changes.outputs.changed == 'true' && inputs.dry_run != 'true'
         run: |
           git config user.name  "Tools Enrichment Bot"
-          git config user.email "bot@aireviewstack.org"
+          git config user.email "chaaya.visa@gmail.com"
           git add website/public/tools.json
           git commit -m "chore(tools): weekly price & rating refresh $(date +'%Y-%m-%d')"
           git push
