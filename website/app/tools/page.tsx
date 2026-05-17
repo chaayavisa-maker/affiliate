@@ -1,5 +1,5 @@
 import ToolsClient from './ToolsClient';
-import toolsData from '../../../data/tools.json';
+import toolsData from '../../public/tools.json';
 
 export default function ToolsPage() {
   return <ToolsClient tools={toolsData} />;
