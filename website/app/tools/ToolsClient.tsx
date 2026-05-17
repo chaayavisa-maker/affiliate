@@ -5,8 +5,8 @@ export interface Tool {
   name: string;
   category: string;
   url: string;
-  price: string;
-  priceNum: number;
+  price: string | null;
+  priceNum: number | null;
   rating: number;
   desc: string;
   badge: string | null;
@@ -52,7 +52,7 @@ export default function ToolsClient({ tools }: Props) {
     let list = tools.filter((t) => cat === 'all' || t.category === cat);
     if (freeOnly) list = list.filter((t) => t.free);
     return [...list].sort((a, b) =>
-      sort === 'rating' ? b.rating - a.rating : a.priceNum - b.priceNum
+      sort === 'rating' ? b.rating - a.rating : (a.priceNum ?? 0) - (b.priceNum ?? 0)
     );
   }, [cat, sort, freeOnly, tools]);
 
