@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write   # needed for git push
+      actions: read     # needed to fetch workflow runs
 
     steps:
       - name: Checkout repo
@@ -59,6 +60,7 @@ jobs:
           run-id: ${{ steps.resolve.outputs.result }}   # ← add this line
           github-token: ${{ secrets.GITHUB_TOKEN }}     # ← required when using run-id
           path: .
+
       - name: Set up Python
         uses: actions/setup-python@v5.6.0
         with:
