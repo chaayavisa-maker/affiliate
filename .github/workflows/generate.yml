@@ -1,0 +1,79 @@
+name: Generate Content
+
+on:
+  schedule:
+    # Runs every day at 8 AM UTC
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+    inputs:
+      articles_count:
+        description: 'Number of articles to generate'
+        required: false
+        default: '2'
+        type: number
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    # No `contents: write` needed — this job never touches git
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4.2.2
+
+      - name: Set up Python
+        uses: actions/setup-python@v5.6.0
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          cd agents
+          pip install -r requirements.txt
+
+      - name: Generate articles (no git ops)
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          ARTICLES_PER_RUN: ${{ inputs.articles_count || '2' }}
+          GITHUB_ACTIONS: 'true'
+        run: |
+          cd agents
+          python orchestrator.py --generate-only
+
+      - name: Upload generated articles
+        uses: actions/upload-artifact@v4.6.2
+        if: always()
+        with:
+          name: generated-articles-${{ github.run_id }}
+          # MDX files + manifest so publish job knows what was written
+          path: |
+            website/content/posts/
+            agents/generated_manifest.json
+            agents/run_summary.json
+          retention-days: 7
+
+  # Automatically trigger publish after a successful generation.
+  # You can also skip this and trigger publish.yml manually whenever you want.
+  trigger-publish:
+    needs: generate
+    if: success()
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write   # needed to trigger another workflow
+    steps:
+      - name: Trigger publish workflow
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              workflow_id: 'publish.yml',
+              ref: 'main',
+              inputs: {
+                generate_run_id: '${{ github.run_id }}'
+              }
+            });

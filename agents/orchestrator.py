@@ -15,8 +15,16 @@ are wasted writing an article that will be rejected for topic overlap.
 Retries are only triggered for fixable issues (word count, format, banned phrases,
 low reflection score). Non-retryable failures (duplicates, fatal fact errors)
 abort that keyword immediately and move on.
+
+Modes
+-----
+  Default (no flag)   : full pipeline — generate + git commit + git push
+  --generate-only     : generate + write MDX files to disk, NO git ops.
+                        Saves agents/generated_manifest.json so publish.py
+                        can pick up exactly which files were produced.
 """
 
+import argparse
 import json
 import logging
 import os
@@ -40,8 +48,23 @@ log = logging.getLogger(__name__)
 ARTICLES_PER_RUN = int(os.getenv("ARTICLES_PER_RUN", "2"))
 
 
-def run():
-    log.info("=== Autonomous affiliate engine starting ===")
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Affiliate content orchestrator")
+    parser.add_argument(
+        "--generate-only",
+        action="store_true",
+        help=(
+            "Run the full generation pipeline but skip all git operations. "
+            "Writes MDX files to disk and saves agents/generated_manifest.json. "
+            "Use publish.py (or the publish workflow) to commit and push afterwards."
+        ),
+    )
+    return parser.parse_args()
+
+
+def run(generate_only: bool = False):
+    mode = "GENERATE-ONLY" if generate_only else "GENERATE + PUBLISH"
+    log.info(f"=== Autonomous affiliate engine starting [{mode}] ===")
     log.info(f"Target: {ARTICLES_PER_RUN} article(s) this run")
 
     groq_key = os.environ.get("GROQ_API_KEY")
@@ -53,29 +76,28 @@ def run():
     content_agent   = ContentAgent(groq_key)
     seo_agent       = SEOAgent(groq_key)
     guardrail_agent = GuardrailAgent(groq_key)
+    # In generate-only mode the publisher writes files but never calls git
     publisher       = PublisherAgent()
 
-    published: list[str] = []
-    skipped:   list[str] = []
+    published: list[dict] = []   # {"path": ..., "title": ..., "slug": ...}
+    skipped:   list[str]  = []
 
     # ── Step 1: Keyword research ───────────────────────────────────────────────
     log.info("Step 1: Keyword research (with semantic dedup)")
-    # Request 3x more candidates than needed so pre-flight duplicate checks
-    # have a large pool to draw from — viable_keywords is capped to ARTICLES_PER_RUN later.
     keywords = keyword_agent.get_keywords(count=ARTICLES_PER_RUN * 3)
     if not keywords:
         log.error("No fresh keywords found — all topics already covered. Exiting.")
         sys.exit(0)
     log.info(f"Keywords selected: {[k['keyword'] for k in keywords]}")
 
-    # ── Step 2: Pre-flight title duplicate check (zero content-generation cost) ─
+    # ── Step 2: Pre-flight title duplicate check ────────────────────────────────
     log.info("Step 2: Pre-flight title generation & duplicate check")
     viable_keywords = []
     for kw in keywords:
         log.info(f"  Checking: '{kw['keyword']}'")
         candidate_title = content_agent.generate_title(kw)
         if not candidate_title:
-            log.warning(f"  Could not generate title — keeping keyword anyway")
+            log.warning("  Could not generate title — keeping keyword anyway")
             viable_keywords.append(kw)
             continue
 
@@ -89,18 +111,18 @@ def run():
             skipped.append(kw["keyword"])
         else:
             log.info(f"  ✓ \"{candidate_title}\" — no duplicate found, proceeding")
-            kw["_preflight_title"] = candidate_title  # cache so write_article can reuse it
+            kw["_preflight_title"] = candidate_title
             viable_keywords.append(kw)
 
     if not viable_keywords:
         log.error("All candidate topics were duplicates — nothing to write today.")
-        _write_summary(published, skipped)
+        _write_summary([], skipped)
+        _write_manifest([], skipped)
         sys.exit(0)
 
-    # Cap to ARTICLES_PER_RUN — we fetched extras only for pre-flight filtering
     viable_keywords = viable_keywords[:ARTICLES_PER_RUN]
 
-    # ── Steps 3-5: Write → SEO → Guardrail → Publish ──────────────────────────
+    # ── Steps 3-4: Write → SEO → Guardrail ────────────────────────────────────
     for kw in viable_keywords:
         log.info(f"\n{'='*60}")
         log.info(f"Processing: {kw['keyword']}")
@@ -130,7 +152,6 @@ def run():
                 f"issues: {len(guardrail_result.issues)}"
             )
 
-            # Non-retryable failures: abort immediately, no point rewriting
             if guardrail_result.non_retryable_issues:
                 log.error(
                     f"  Non-retryable failure(s) — aborting '{kw['keyword']}':\n"
@@ -153,26 +174,32 @@ def run():
             skipped.append(kw["keyword"])
             continue
 
-        log.info("  Step 5: Publishing")
-        path = publisher.publish(article)
-        published.append(path)
-        log.info(f"  Published: {path}")
+        # ── Step 5: Write file (always) — git ops depend on mode ───────────────
+        log.info(f"  Step 5: Writing article ({'file only' if generate_only else 'file + git commit'})")
+        path = publisher.publish(article, commit=not generate_only)
+        published.append({"path": path, "title": article["title"], "slug": article["slug"]})
+        log.info(f"  Written: {path}")
 
         if guardrail_result and guardrail_result.reflection_feedback:
             log.info(f"  Editor reflection:\n{guardrail_result.reflection_feedback}")
 
-    # Push all commits in one shot
-    if os.getenv("GITHUB_ACTIONS") and published:
+    # ── Step 6: Push (full mode only) ─────────────────────────────────────────
+    if not generate_only and os.getenv("GITHUB_ACTIONS") and published:
+        log.info("Step 6: Git push")
         publisher.push()
+    elif generate_only:
+        log.info("Step 6: Skipped (--generate-only mode) — run publish.py to commit & push")
 
     log.info(f"\n{'='*60}")
-    log.info(f"Done — published {len(published)}, skipped {len(skipped)}")
+    log.info(f"Done — {'generated' if generate_only else 'published'} {len(published)}, skipped {len(skipped)}")
     for p in published:
-        log.info(f"  ✓  {p}")
+        log.info(f"  ✓  {p['path']}")
     for s in skipped:
         log.warning(f"  ✗  {s}")
 
-    _write_summary(published, skipped)
+    published_paths = [p["path"] for p in published]
+    _write_summary(published_paths, skipped)
+    _write_manifest(published, skipped)
 
 
 def _write_summary(published: list, skipped: list):
@@ -187,5 +214,21 @@ def _write_summary(published: list, skipped: list):
     log.info("Run summary saved to run_summary.json")
 
 
+def _write_manifest(published: list[dict], skipped: list[str]):
+    """
+    Writes generated_manifest.json — consumed by publish.py in the publish job.
+
+    published: list of {"path": str, "title": str, "slug": str}
+    """
+    manifest = {
+        "generated_at": datetime.utcnow().isoformat(),
+        "articles":     published,
+        "skipped":      skipped,
+    }
+    Path("generated_manifest.json").write_text(json.dumps(manifest, indent=2))
+    log.info("Manifest saved to generated_manifest.json")
+
+
 if __name__ == "__main__":
-    run()
+    args = parse_args()
+    run(generate_only=args.generate_only)
