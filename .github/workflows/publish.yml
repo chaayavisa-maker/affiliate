@@ -56,9 +56,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: generated-articles-${{ steps.resolve.outputs.result }}
-          # Restore files to repo root so paths match the originals
+          run-id: ${{ steps.resolve.outputs.result }}   # ← add this line
+          github-token: ${{ secrets.GITHUB_TOKEN }}     # ← required when using run-id
           path: .
-
       - name: Set up Python
         uses: actions/setup-python@v5.6.0
         with:
