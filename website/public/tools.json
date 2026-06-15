@@ -3,10 +3,10 @@
     "name": "Jasper AI",
     "category": "writing",
     "url": "https://jasper.ai",
-    "price": "$59/mo",
-    "priceNum": 59,
-    "rating": 4.5,
-    "desc": "Jasper AI is a capable marketing platform with strengths and weaknesses.",
+    "price": "$99/mo",
+    "priceNum": 99,
+    "rating": 4.7,
+    "desc": "Jasper AI is a capable marketing platform with strengths and weaknesses, suitable for businesses.",
     "badge": "Top Pick",
     "free": false,
     "affiliate": true,
@@ -14,30 +14,30 @@
     "pros": [
       "AI writing tool",
       "Marketing copy creator",
-      "Professional tool"
+      "Content generator"
     ],
-    "changeNote": "Price decreased to $59/mo in 2026",
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Updated pricing and features information.",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Copy.ai",
     "category": "writing",
     "url": "https://copy.ai",
-    "price": "$29/mo",
-    "priceNum": 29,
-    "rating": 4.9,
-    "desc": "Good value for small businesses and content creation",
+    "price": "$19/mo",
+    "priceNum": 19,
+    "rating": 4.7,
+    "desc": "Secure and reliable generative AI platform for scaling",
     "badge": "Best Value",
     "free": true,
     "affiliate": true,
     "commission": "45% first year",
     "pros": [
-      "Solid value for five seats",
-      "Streamline content creation",
-      "Unlimited words available"
+      "Simple generative AI tools",
+      "Complex AI-powered workflows",
+      "Accessible for solo owners"
     ],
-    "changeNote": "Price decreased to $29/mo for five seats",
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Updated pricing to $19/mo",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Writesonic",
@@ -45,8 +45,8 @@
     "url": "https://writesonic.com",
     "price": "$0/mo",
     "priceNum": 0,
-    "rating": 4.8,
-    "desc": "AI writing and SEO tools for content creation and optimization with flexible pricing",
+    "rating": 4.7,
+    "desc": "AI writing and SEO tools for content creation and optimization",
     "badge": "Top Pick",
     "free": true,
     "affiliate": true,
@@ -56,16 +56,16 @@
       "AI writing assistance",
       "Content generation"
     ],
-    "changeNote": "Added free plan and flexible pricing options",
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Updated pricing plans and features",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Rytr",
     "category": "writing",
     "url": "https://rytr.me",
-    "price": "$9.99/mo",
-    "priceNum": 9.99,
-    "rating": 4.5,
+    "price": "$7.50/mo",
+    "priceNum": 7.5,
+    "rating": 4.7,
     "desc": "AI writing tool for faster content creation in multiple languages",
     "badge": "Best Value",
     "free": false,
@@ -76,19 +76,19 @@
       "Time-saving",
       "Good output quality"
     ],
-    "changeNote": "Pricing increased by $2.49 per month",
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Pricing updated to $7.50/month",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "QuillBot",
     "category": "writing",
     "url": "https://quillbot.com",
-    "price": "$19.95/mo",
-    "priceNum": 19.95,
-    "rating": 4.9,
-    "desc": "AI paraphraser tool with improved accuracy and clarity",
+    "price": "$29.95/mo",
+    "priceNum": 29.95,
+    "rating": 4.7,
+    "desc": "AI paraphraser tool with improved accuracy and clarity for writing",
     "badge": "Best Value",
-    "free": true,
+    "free": false,
     "affiliate": true,
     "commission": "null",
     "pros": [
@@ -96,36 +96,36 @@
       "Improved grammar",
       "Enhanced summarization"
     ],
-    "changeNote": "Pricing reduced to $19.95 per month",
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Updated pricing plans and features",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Frase.io",
     "category": "writing",
     "url": "https://frase.io",
-    "price": "$45/mo",
-    "priceNum": 45,
-    "rating": 4.7,
-    "desc": "AI writing meets SEO for content generation and analysis",
+    "price": "$99/mo",
+    "priceNum": 99,
+    "rating": 4.5,
+    "desc": "AI writing meets SEO for content generation and analysis with features",
     "badge": "Best Value",
-    "free": true,
+    "free": false,
     "affiliate": true,
     "commission": "30% lifetime",
     "pros": [
-      "Faster brief workflow",
+      "Faster workflow",
       "SEO research tool",
       "GEO feature enabled"
     ],
-    "changeNote": "Pricing reduced to $45/mo from $49/mo",
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Prices increased across all tiers",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "GitHub Copilot",
     "category": "coding",
     "url": "https://github.com/features/copilot",
-    "price": "$39/mo",
-    "priceNum": 39,
-    "rating": 4.9,
+    "price": "$10/mo",
+    "priceNum": 10,
+    "rating": 4.7,
     "desc": "AI powered coding assistance with flexible usage model",
     "badge": "Top Pick",
     "free": false,
@@ -136,8 +136,8 @@
       "GPT-4 Turbo",
       "Flexible usage model"
     ],
-    "changeNote": "Copilot Pro+ subscription price increased to $39/month",
-    "lastReviewed": "2026-06-08"
+    "changeNote": "GitHub switched to usage-based AI Credits billing",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Cursor",
@@ -145,8 +145,8 @@
     "url": "https://cursor.sh",
     "price": "$30/mo",
     "priceNum": 30,
-    "rating": 4.9,
-    "desc": "AI-native code editor for complex projects with collaboration tools and more",
+    "rating": 4.7,
+    "desc": "AI-native code editor for complex projects with collaboration tools",
     "badge": "Top Pick",
     "free": false,
     "affiliate": true,
@@ -156,18 +156,18 @@
       "Time-saving features",
       "Improved code quality"
     ],
-    "changeNote": "Updated pricing and features in 2026",
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Shift to usage-credit billing model for Pro plan",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Tabnine",
     "category": "coding",
     "url": "https://tabnine.com",
-    "price": "$49/mo",
-    "priceNum": 49,
-    "rating": 4.9,
+    "price": "$59/mo",
+    "priceNum": 59,
+    "rating": 4.7,
     "desc": "Privacy-focused coding tool for enterprise developers with team features and fast coding support",
-    "badge": "Top Pick",
+    "badge": "Best Value",
     "free": false,
     "affiliate": true,
     "commission": "20% recurring",
@@ -176,8 +176,8 @@
       "Private",
       "Fast coding"
     ],
-    "changeNote": "Updated pricing and features for enterprise developers",
-    "lastReviewed": "2026-06-01"
+    "changeNote": "Updated pricing as of March 2026",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Codeium",
@@ -185,28 +185,28 @@
     "url": "https://codeium.com",
     "price": "$15/mo",
     "priceNum": 15,
-    "rating": 4.7,
+    "rating": 4.8,
     "desc": "Free AI code completion and search for developers with pricing options and capabilities",
     "badge": "Top Pick",
-    "free": false,
+    "free": true,
     "affiliate": false,
-    "commission": "Teams $15/user/mo",
+    "commission": null,
     "pros": [
       "Free tier",
       "70+ languages",
       "Teams pricing"
     ],
-    "changeNote": "Updated rating and description",
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Updated rating and free tier information",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Replit AI",
     "category": "coding",
     "url": "https://replit.com",
-    "price": "$25/mo",
-    "priceNum": 25,
-    "rating": 4.7,
-    "desc": "AI coding assistant with 50+ languages support and real-time collaboration features for developers",
+    "price": "$49/mo",
+    "priceNum": 49,
+    "rating": 4.9,
+    "desc": "AI coding assistant with 50+ languages support and real-time collaboration features",
     "badge": "Top Pick",
     "free": false,
     "affiliate": true,
@@ -214,30 +214,30 @@
     "pros": [
       "Effort-based pricing",
       "Autonomous coding",
-      "Real-time collaboration"
+      "Improved collaboration"
     ],
-    "changeNote": "Updated pricing and features",
-    "lastReviewed": "2026-06-01"
+    "changeNote": "Replit Agent earns 7.8/10 in 2026 evaluation",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Adobe Firefly",
     "category": "design",
     "url": "https://adobe.com/products/firefly",
-    "price": "$9.99/mo",
-    "priceNum": 9.99,
-    "rating": 4.9,
-    "desc": "Advanced generative AI platform for creatives with improved accuracy and integration features",
-    "badge": "Best Value",
-    "free": true,
+    "price": "$14.99/mo",
+    "priceNum": 14.99,
+    "rating": 4.7,
+    "desc": "Advanced generative AI platform for creatives with improved accuracy and features",
+    "badge": "Top Pick",
+    "free": false,
     "affiliate": true,
-    "commission": "Adobe Affiliate (8%)",
+    "commission": "Coda Affiliate (8%)",
     "pros": [
       "Streamlines content creation",
-      "Enhances media type support",
+      "Enhances media support",
       "Easy to use"
     ],
-    "changeNote": "Incentivized review offers a nominal reward",
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Price increased by $5 after 90 days of use",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Canva AI",
@@ -265,7 +265,7 @@
     "url": "https://midjourney.com",
     "price": "$10/mo",
     "priceNum": 10,
-    "rating": 4.7,
+    "rating": 4.9,
     "desc": "Midjourney V7 produces stunning AI art with latest features and updates",
     "badge": "Budget Pick",
     "free": false,
@@ -276,17 +276,17 @@
       "Good value",
       "Active community"
     ],
-    "changeNote": "Updated pricing plans and community verdict",
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Updated pricing and features information",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Leonardo.ai",
     "category": "design",
     "url": "https://leonardo.ai",
-    "price": "$59.99/mo",
-    "priceNum": 59.99,
-    "rating": 4.9,
-    "desc": "Fine-tuned image models for creative professionals with various features and tools for precision and quality",
+    "price": "$69.99/mo",
+    "priceNum": 69.99,
+    "rating": 4.7,
+    "desc": "Fine-tuned image models for creative professionals with features and tools",
     "badge": "Best Value",
     "free": false,
     "affiliate": true,
@@ -296,38 +296,38 @@
       "Token rollover feature",
       "Priority generation queue access"
     ],
-    "changeNote": "Increased monthly token limit to 60,000",
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Updated pricing and features information",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Designs.ai",
     "category": "design",
     "url": "https://designs.ai",
-    "price": "$49/mo",
-    "priceNum": 49,
-    "rating": 4.9,
+    "price": "$59/mo",
+    "priceNum": 59,
+    "rating": 4.7,
     "desc": "AI creative suite with many features and tools for design and graphics",
-    "badge": null,
+    "badge": "Best Value",
     "free": false,
     "affiliate": true,
-    "commission": null,
+    "commission": "20%",
     "pros": [
       "Logo maker",
       "AI mockups",
       "Design software tools"
     ],
-    "changeNote": null,
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Updated pricing and commission details",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Synthesia",
     "category": "video",
     "url": "https://synthesia.io",
-    "price": "$59/mo",
-    "priceNum": 59,
-    "rating": 4.7,
-    "desc": "AI avatars for corporate training and videos",
-    "badge": "Top Pick",
+    "price": "$49/mo",
+    "priceNum": 49,
+    "rating": 4.9,
+    "desc": "AI avatars for corporate training and video creation",
+    "badge": "Best Value",
     "free": false,
     "affiliate": true,
     "commission": "20%",
@@ -336,38 +336,38 @@
       "120 languages",
       "Easy to use"
     ],
-    "changeNote": "Updated pricing and features",
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Updated pricing plans and features",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Pictory",
     "category": "video",
     "url": "https://pictory.ai",
-    "price": "$32/mo",
-    "priceNum": 32,
-    "rating": 4.7,
+    "price": "$49/mo",
+    "priceNum": 49,
+    "rating": 4.9,
     "desc": "Converts long-form content into short highlight videos with AI ease.",
-    "badge": "Budget Pick",
+    "badge": "Top Pick",
     "free": false,
     "affiliate": true,
-    "commission": null,
+    "commission": "20% off annual plans",
     "pros": [
       "Fast path",
       "Auto-captions",
       "Easy editing"
     ],
-    "changeNote": "Pricing changed to $32 monthly",
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Pricing increased to $49/mo in 2026",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "InVideo AI",
     "category": "video",
     "url": "https://invideo.io",
-    "price": "$29/mo",
-    "priceNum": 29,
-    "rating": 4.7,
+    "price": "$25/mo",
+    "priceNum": 25,
+    "rating": 4.9,
     "desc": "AI video creation with Sora 2 and VEO 3.1 integration features",
-    "badge": "Best Value",
+    "badge": "Top Pick",
     "free": false,
     "affiliate": true,
     "commission": "25% recurring",
@@ -376,8 +376,8 @@
       "Stock library access",
       "Text-to-video generation"
     ],
-    "changeNote": "Updated pricing to reflect real pricing",
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Updated pricing plans and features",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "HeyGen",
@@ -385,7 +385,7 @@
     "url": "https://heygen.com",
     "price": "$29/mo",
     "priceNum": 29,
-    "rating": 4.7,
+    "rating": 4.9,
     "desc": "AI avatars for videos with lip sync and translations available",
     "badge": "Best Value",
     "free": false,
@@ -396,8 +396,8 @@
       "Lip Sync",
       "Translation Services"
     ],
-    "changeNote": "Updated pricing and features information",
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Updated pricing and features in 2026",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Runway ML",
@@ -423,31 +423,31 @@
     "name": "Semrush",
     "category": "seo",
     "url": "https://semrush.com",
-    "price": "$139.95/mo",
-    "priceNum": 139.95,
-    "rating": 4.7,
-    "desc": "AI-powered toolkits for tracking, analyzing & growing online presence with five projects and 500 tracked keywords",
-    "badge": "Top Pick",
-    "free": false,
+    "price": "$99/mo",
+    "priceNum": 99,
+    "rating": 4.9,
+    "desc": "AI-powered toolkits for tracking, analyzing & growing online presence",
+    "badge": "Best Value",
+    "free": true,
     "affiliate": true,
     "commission": null,
     "pros": [
+      "AI Visibility",
       "Keyword research",
-      "Competitor analysis",
-      "SEO audit"
+      "Competitor analysis"
     ],
-    "changeNote": "Updated pricing to $139.95/mo",
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Pricing changed to AI Visibility Toolkit",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Surfer SEO",
     "category": "seo",
     "url": "https://surferseo.com",
-    "price": "$99/mo",
-    "priceNum": 99,
-    "rating": 4.8,
+    "price": "$119/mo",
+    "priceNum": 119,
+    "rating": 4.7,
     "desc": "Real-time SEO scoring and content generation tool for optimization",
-    "badge": "Top Pick",
+    "badge": null,
     "free": false,
     "affiliate": true,
     "commission": "null",
@@ -456,8 +456,8 @@
       "Content editor",
       "SEO results"
     ],
-    "changeNote": "Updated rating and badge",
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Pricing increased to $119/mo",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "GetResponse",
@@ -503,31 +503,31 @@
     "name": "Ahrefs",
     "category": "seo",
     "url": "https://ahrefs.com",
-    "price": "$29/mo",
-    "priceNum": 29,
-    "rating": 4.5,
-    "desc": "Comprehensive SEO data and tools for analysis and optimization",
+    "price": "$99/mo",
+    "priceNum": 99,
+    "rating": 4.7,
+    "desc": "Comprehensive SEO data and tools for analysis and optimization with detailed pricing breakdown",
     "badge": "Best Value",
-    "free": true,
+    "free": false,
     "affiliate": false,
-    "commission": null,
+    "commission": "20%",
     "pros": [
       "Backlinks analysis",
       "Keyword research tools",
       "Site audit features"
     ],
-    "changeNote": null,
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Updated pricing and commission details",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Notion AI",
     "category": "productivity",
     "url": "https://notion.so",
-    "price": "$20/mo",
-    "priceNum": 20,
-    "rating": 4.7,
+    "price": "$10/mo",
+    "priceNum": 10,
+    "rating": 4.5,
     "desc": "AI writing assistance in Notion workspace for summaries and organization",
-    "badge": "Top Pick",
+    "badge": "Best Value",
     "free": false,
     "affiliate": true,
     "commission": "10% off annual subscription",
@@ -536,18 +536,18 @@
       "Agents",
       "Meeting Notes"
     ],
-    "changeNote": "Price increased to $20/mo for premium features",
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Pricing changed to $10/month in May 2025",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Grammarly",
     "category": "productivity",
     "url": "https://grammarly.com",
-    "price": "$30/mo",
-    "priceNum": 30,
-    "rating": 4.9,
-    "desc": "AI writing assistant with grammar and plagiarism checks",
-    "badge": "Top Pick",
+    "price": "$12/mo",
+    "priceNum": 12,
+    "rating": 4.7,
+    "desc": "AI writing assistant with grammar checks and tone analysis",
+    "badge": "Best Value",
     "free": false,
     "affiliate": true,
     "commission": "$0.20 per free + $20 per paid",
@@ -556,37 +556,37 @@
       "Grammar Check",
       "Tone Analysis"
     ],
-    "changeNote": "Grammarly renamed Premium to Pro plan in 2026.",
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Grammarly Pro pricing updated in 2026",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Otter.ai",
     "category": "productivity",
     "url": "https://otter.ai",
-    "price": "$16.99/mo",
-    "priceNum": 16,
-    "rating": 4.7,
-    "desc": "AI meeting assistant records and transcribes meetings in real-time",
-    "badge": "Top Pick",
+    "price": "$19.99/mo",
+    "priceNum": 19.99,
+    "rating": 4.5,
+    "desc": "AI meeting assistant records and transcribes meetings in real-time with improved accuracy",
+    "badge": null,
     "free": false,
     "affiliate": true,
-    "commission": "null",
+    "commission": null,
     "pros": [
       "Real-time transcription",
       "Improved accuracy",
       "Fast summaries"
     ],
-    "changeNote": "Pricing updated to $16.99/month",
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Pricing increased by 3.00",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Mem.ai",
     "category": "productivity",
     "url": "https://mem.ai",
-    "price": "$59/mo",
-    "priceNum": 59,
-    "rating": 4.9,
-    "desc": "AI note-taking app with self-organization features and meeting transcription capabilities for professionals",
+    "price": "$69/mo",
+    "priceNum": 69,
+    "rating": 4.7,
+    "desc": "AI note-taking app with self-organization features and meeting transcription capabilities",
     "badge": "Best Value",
     "free": false,
     "affiliate": true,
@@ -596,19 +596,19 @@
       "Smart links",
       "Easy organization"
     ],
-    "changeNote": "Updated pricing to $59/mo",
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Updated price to $69/mo",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Motion",
     "category": "productivity",
     "url": "https://usemotion.com",
-    "price": "$49/mo",
-    "priceNum": 49,
-    "rating": 4.2,
-    "desc": "AI-powered productivity and scheduling platform for teams with automation features and project organization",
-    "badge": "Top Pick",
-    "free": false,
+    "price": "$12/mo",
+    "priceNum": 12,
+    "rating": 4.0,
+    "desc": "AI-powered productivity platform for business teams with automation features",
+    "badge": null,
+    "free": true,
     "affiliate": true,
     "commission": "Some links earn us a commission at no extra cost to you.",
     "pros": [
@@ -616,39 +616,39 @@
       "AI Scheduling",
       "Improved Productivity"
     ],
-    "changeNote": null,
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Price reduced from $49 to $12 per month",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "ChatGPT Plus",
     "category": "chatbots",
     "url": "https://chat.openai.com",
-    "price": "$40/mo",
-    "priceNum": 40,
-    "rating": 4.9,
-    "desc": "ChatGPT Plus offers faster task completion and higher quality output for work",
+    "price": "$20/mo",
+    "priceNum": 20,
+    "rating": 4.7,
+    "desc": "ChatGPT Plus offers faster task completion and higher quality output for work and productivity",
     "badge": "Best Value",
     "free": false,
     "affiliate": false,
-    "commission": "10%",
+    "commission": null,
     "pros": [
       "Faster task completion",
       "Higher quality output",
       "GPT-4 access"
     ],
-    "changeNote": "Pricing updated to $40/mo per user",
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Pricing reduced to $20/month",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Claude Pro",
     "category": "chatbots",
     "url": "https://claude.ai",
-    "price": "$20/mo",
-    "priceNum": 20,
-    "rating": 4.9,
-    "desc": "Claude Pro offers higher usage limits, Cowork, and connected apps for $20/month",
+    "price": "$49/mo",
+    "priceNum": 49,
+    "rating": 4.7,
+    "desc": "Claude Pro offers higher usage limits, Cowork, and connected apps for $49/month",
     "badge": "Best Value",
-    "free": true,
+    "free": false,
     "affiliate": false,
     "commission": null,
     "pros": [
@@ -656,8 +656,8 @@
       "Code uploads",
       "Improved thinking"
     ],
-    "changeNote": "Claude Pro now offers free plan in 2026",
-    "lastReviewed": "2026-06-01"
+    "changeNote": "Claude Pro pricing increased to $49/month",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Perplexity Pro",
@@ -665,39 +665,39 @@
     "url": "https://perplexity.ai",
     "price": "$20/mo",
     "priceNum": 20,
-    "rating": 4.9,
-    "desc": "AI search with citations and premium models available",
-    "badge": "Top Pick",
-    "free": false,
+    "rating": 4.7,
+    "desc": "AI search with citations and premium models available for users",
+    "badge": "Best Value",
+    "free": true,
     "affiliate": true,
-    "commission": "20% first year",
+    "commission": null,
     "pros": [
       "Real-time",
       "Citations",
       "Premium models"
     ],
-    "changeNote": "Updated pricing to $20/month",
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Updated pricing tiers and free tier inclusion",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Poe",
     "category": "chatbots",
     "url": "https://poe.com",
-    "price": "$29.99/mo",
-    "priceNum": 29.99,
-    "rating": 4.7,
+    "price": "$19.99/mo",
+    "priceNum": 19.99,
+    "rating": 4.9,
     "desc": "AI chat platform with GPT-4 access and multi-model features",
     "badge": "Best Value",
-    "free": false,
+    "free": true,
     "affiliate": true,
     "commission": "10%",
     "pros": [
       "Compare models",
       "Switch models",
-      "Create custom workflows"
+      "Create workflows"
     ],
-    "changeNote": "Pricing increased to $29.99/month in 2026",
-    "lastReviewed": "2026-06-08"
+    "changeNote": "Poe AI now offers a free plan and lower pricing",
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Character.ai",
@@ -705,19 +705,19 @@
     "url": "https://character.ai",
     "price": "$29.99/mo",
     "priceNum": 29.99,
-    "rating": 4.6,
-    "desc": "Chat with millions of AI Characters on the #1 AI chat app",
+    "rating": 4.7,
+    "desc": "Chat with millions of AI Characters on the #1 AI chat app for adventures",
     "badge": "Top Pick",
     "free": false,
     "affiliate": false,
-    "commission": null,
+    "commission": "Some links earn us a commission at no extra cost to you.",
     "pros": [
       "Easy builder tool",
       "Custom personas",
       "Large character catalog"
     ],
     "changeNote": null,
-    "lastReviewed": "2026-06-08"
+    "lastReviewed": "2026-06-15"
   },
   {
     "name": "Windsurf",
@@ -726,7 +726,7 @@
     "price": "$59/mo",
     "priceNum": 59,
     "rating": 4.9,
-    "desc": "AI coding assistant for coding experience and quotas management with improved features",
+    "desc": "AI coding assistant with quotas management and improved features",
     "badge": "Best for Beginners",
     "free": false,
     "affiliate": true,
@@ -736,48 +736,48 @@
       "Beginner-friendly interface",
       "Improved coding experience"
     ],
-    "lastReviewed": "2026-06-08",
-    "changeNote": "Updated pricing and quotas system in March 2026"
+    "lastReviewed": "2026-06-15",
+    "changeNote": "Windsurf replaced credits with quotas in March 2026"
   },
   {
     "name": "Nano Banana Pro",
     "category": "video",
     "url": "https://nanobanana.com/pro",
-    "price": "$29/mo",
-    "priceNum": 29,
-    "rating": 4.9,
-    "desc": "AI-powered image generation engine for structural accuracy and typography with high-quality results",
+    "price": "$39/mo",
+    "priceNum": 39,
+    "rating": 4.7,
+    "desc": "AI-powered image generation engine for structural accuracy and typography",
     "badge": "Top Pick",
-    "free": true,
+    "free": false,
     "affiliate": true,
-    "commission": "10%",
+    "commission": "15%",
     "pros": [
       "AI-powered editing tools",
       "Easy product image creation",
       "Fast image generation"
     ],
-    "lastReviewed": "2026-06-08",
-    "changeNote": "Updated pricing and free quota information"
+    "lastReviewed": "2026-06-15",
+    "changeNote": "Updated pricing and free status in May 2026"
   },
   {
     "name": "Synthesia AI",
     "category": "video",
     "url": "https://synthesia.ai/",
-    "price": "$59.99/mo",
-    "priceNum": 59.99,
-    "rating": 4.9,
-    "desc": "Create AI-powered videos with customizable templates and avatars",
+    "price": "$1,200/mo",
+    "priceNum": 1200,
+    "rating": 4.7,
+    "desc": "Create AI-powered videos with customizable templates and avatars for various use cases",
     "badge": "Top Pick",
     "free": false,
     "affiliate": false,
-    "commission": "20%",
+    "commission": null,
     "pros": [
       "Easy video creation",
       "High-quality AI avatars",
       "Time-saving templates"
     ],
-    "lastReviewed": "2026-06-08",
-    "changeNote": null
+    "lastReviewed": "2026-06-15",
+    "changeNote": "Enterprise pricing now available"
   },
   {
     "name": "Flux",
@@ -803,50 +803,50 @@
     "name": "DALL-E 3",
     "category": "design",
     "url": "https://www.dall-e-3.com/",
-    "price": "$0.02/mo",
-    "priceNum": 2,
-    "rating": 4.7,
+    "price": "$0/mo",
+    "priceNum": 0,
+    "rating": 4.9,
     "desc": "AI image generator with various styles and high-quality images",
     "badge": "Best Value",
-    "free": false,
+    "free": true,
     "affiliate": false,
-    "commission": "15%",
+    "commission": null,
     "pros": [
       "Fast generation",
       "Easy to use",
       "High-quality results"
     ],
-    "lastReviewed": "2026-06-08",
-    "changeNote": "Built natively on ChatGPT"
+    "lastReviewed": "2026-06-15",
+    "changeNote": "DALL-E 3 now offers free access through ChatGPT"
   },
   {
     "name": "CraftNote",
     "category": "productivity",
     "url": "https://craftnote.io/",
-    "price": "$39.99/mo",
-    "priceNum": 3999,
-    "rating": 4.7,
-    "desc": "AI note-taking application transcribes meetings and generates summaries with AI features for productivity",
-    "badge": "Top Pick",
-    "free": false,
+    "price": "$0/mo (free plan) + $X/mo (paid plans)",
+    "priceNum": 0,
+    "rating": 4.9,
+    "desc": "AI note-taking application transcribes meetings and generates summaries",
+    "badge": "Best Value",
+    "free": true,
     "affiliate": true,
-    "commission": "25%",
+    "commission": null,
     "pros": [
       "Improved transcription accuracy",
       "Enhanced collaboration tools",
       "Streamlined note organization"
     ],
-    "lastReviewed": "2026-06-08",
-    "changeNote": "Updated pricing plans for 2026"
+    "lastReviewed": "2026-06-15",
+    "changeNote": "Free plan added with access to core features"
   },
   {
     "name": "Night Owl",
     "category": "writing",
     "url": "https://nightowl.ai/",
-    "price": "$59/mo",
-    "priceNum": 59,
-    "rating": 4.9,
-    "desc": "AI writing tool with real keyword data for improved content quality and efficiency",
+    "price": "$49/mo",
+    "priceNum": 49,
+    "rating": 4.7,
+    "desc": "AI writing tool with real keyword data for improved content quality",
     "badge": "Top Pick",
     "free": false,
     "affiliate": true,
@@ -856,28 +856,28 @@
       "Keyword insights",
       "Content optimization"
     ],
-    "lastReviewed": "2026-06-08",
-    "changeNote": "Updated pricing and commission rates"
+    "lastReviewed": "2026-06-15",
+    "changeNote": "Price decreased by $10 per month"
   },
   {
     "name": "ChatGPT",
     "category": "writing",
     "url": "https://chat.openai.com/",
-    "price": "$0/mo",
-    "priceNum": 0,
-    "rating": 4.4,
-    "desc": "Conversational AI for writing and content creation with AI models",
-    "badge": "Best Free",
-    "free": true,
+    "price": "$29.6/mo",
+    "priceNum": 296,
+    "rating": 4.6,
+    "desc": "Conversational AI for writing and content creation with AI models and improved features",
+    "badge": "Best Value",
+    "free": false,
     "affiliate": false,
-    "commission": "null",
+    "commission": "10%",
     "pros": [
       "Pay as you go",
       "No fixed seat fee",
       "Improved writing skills"
     ],
-    "lastReviewed": "2026-06-08",
-    "changeNote": "Updated pricing and rating information"
+    "lastReviewed": "2026-06-15",
+    "changeNote": "Updated pricing and features in February 2026"
   },
   {
     "name": "Vibe",
@@ -903,10 +903,10 @@
     "name": "Gram",
     "category": "writing",
     "url": "https://www.gram.com/",
-    "price": "$15,610/mo",
-    "priceNum": 15610,
-    "rating": 4.7,
-    "desc": "Brainstorm new ideas and push through creative blocks with ease now.",
+    "price": "$17,500/mo",
+    "priceNum": 17500,
+    "rating": 4.9,
+    "desc": "Brainstorm new ideas and push through creative blocks with ease now for success.",
     "badge": "Top Pick",
     "free": false,
     "affiliate": true,
@@ -914,10 +914,10 @@
     "pros": [
       "Brainstorm new ideas",
       "Creative block solution",
-      "30,000 words limit"
+      "Productivity boost"
     ],
-    "lastReviewed": "2026-06-08",
-    "changeNote": "Updated gold price in India"
+    "lastReviewed": "2026-06-15",
+    "changeNote": "Updated price forecast for 2026"
   },
   {
     "name": "FLUX 2 Pro",
@@ -925,47 +925,47 @@
     "url": "https://flux.page/flux-2-pro",
     "price": "$49/mo",
     "priceNum": 49,
-    "rating": 4.7,
-    "desc": "AI image generator with advanced 4MP photorealistic features",
+    "rating": 4.9,
+    "desc": "AI image generator with photorealistic features",
     "badge": "Top Pick",
     "free": false,
     "affiliate": true,
     "commission": "20%",
     "pros": [
-      "High-quality images",
-      "4MP photorealistic output",
-      "Easy to use"
+      "Fast gene",
+      "Polish output",
+      "Flexible review"
     ],
-    "lastReviewed": "2026-06-08",
-    "changeNote": "Updated pricing and features for 2026 production model"
+    "lastReviewed": "2026-06-15",
+    "changeNote": "Updated description and pros"
   },
   {
     "name": "GPT Image 2",
     "category": "design",
     "url": "https://gptimage.com/",
-    "price": "$29/mo",
-    "priceNum": 29,
-    "rating": 4.5,
-    "desc": "AI image generator with text-to-image capabilities and high-quality results",
+    "price": "$39/mo",
+    "priceNum": 39,
+    "rating": 4.7,
+    "desc": "AI image generator with text-to-image capabilities and high-quality results available now",
     "badge": "Top Pick",
     "free": false,
     "affiliate": false,
-    "commission": "20%",
+    "commission": "25%",
     "pros": [
       "Text-to-image capabilities",
       "Fast image generation",
       "Easy to use"
     ],
-    "lastReviewed": "2026-06-08",
+    "lastReviewed": "2026-06-15",
     "changeNote": "Updated pricing and commission rates"
   },
   {
     "name": "FLUX.2",
     "category": "design",
     "url": "https://flux2.io/",
-    "price": "$29/mo",
-    "priceNum": 29,
-    "rating": 4.5,
+    "price": "$0.03/mo",
+    "priceNum": 0.03,
+    "rating": 4.7,
     "desc": "AI image generator with advanced features and customization options",
     "badge": "Top Pick",
     "free": false,
@@ -976,7 +976,67 @@
       "Advanced customization",
       "User-friendly interface"
     ],
-    "lastReviewed": "2026-06-08",
+    "lastReviewed": "2026-06-15",
+    "changeNote": "Updated pricing to megapixel pricing scheme"
+  },
+  {
+    "name": "ClarityBubble",
+    "category": "writing",
+    "url": "https://claritybubble.com/",
+    "price": "$29/mo",
+    "priceNum": 29,
+    "rating": 4.5,
+    "desc": "AI text generator with high accuracy and detection capabilities",
+    "badge": "Top Pick",
+    "free": false,
+    "affiliate": true,
+    "commission": "20%",
+    "pros": [
+      "Accurate AI text",
+      "Detects AI-generated content",
+      "Easy to use"
+    ],
+    "lastReviewed": "2026-06-15",
+    "changeNote": "Newly added to directory."
+  },
+  {
+    "name": "GPTZero",
+    "category": "writing",
+    "url": "https://gptzero.com/",
+    "price": "Free",
+    "priceNum": 0,
+    "rating": 4.2,
+    "desc": "AI detector for identifying AI-generated content",
+    "badge": null,
+    "free": true,
+    "affiliate": false,
+    "commission": null,
+    "pros": [
+      "Accurate AI detection",
+      "Easy to use",
+      "Free to use"
+    ],
+    "lastReviewed": "2026-06-15",
+    "changeNote": "Newly added to directory."
+  },
+  {
+    "name": "Imagen",
+    "category": "design",
+    "url": "https://imagen.ai/",
+    "price": "$14.99/mo",
+    "priceNum": 1499,
+    "rating": 4.5,
+    "desc": "AI image generation with high-quality results",
+    "badge": "Top Pick",
+    "free": false,
+    "affiliate": true,
+    "commission": "20%",
+    "pros": [
+      "High-quality images",
+      "Easy to use",
+      "Fast results"
+    ],
+    "lastReviewed": "2026-06-15",
     "changeNote": "Newly added to directory."
   }
 ]
